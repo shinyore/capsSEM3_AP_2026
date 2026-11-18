@@ -1,226 +1,57 @@
-erDiagram
-    User {
-        string id PK
-        string fullName
-        string email UK
-        string password
-        string phone "nullable"
-        Role role
-        boolean isActive
-        datetime createdAt
-        datetime updatedAt
-    }
-    Institution {
-        string id PK
-        string userId FK, UK
-        string name
-        string officialEmail UK
-        string website "nullable"
-        string address "nullable"
-        string description "nullable"
-        string contactInfo "nullable"
-        boolean isVerified
-        datetime createdAt
-        datetime updatedAt
-    }
-    StudentProfile {
-        string id PK
-        string userId FK, UK
-        string institutionId FK "nullable"
-        string degree "nullable"
-        string department "nullable"
-        int graduationYear "nullable"
-        int semester "nullable"
-        string bio "nullable"
-        string profileImage "nullable"
-        string resumeUrl "nullable"
-        string linkedIn "nullable"
-        string github "nullable"
-        string portfolio "nullable"
-        datetime createdAt
-        datetime updatedAt
-    }
-    Skill {
-        string id PK
-        string name UK
-        string category
-        string description "nullable"
-        datetime createdAt
-        datetime updatedAt
-    }
-    StudentSkill {
-        string id PK
-        string studentProfileId FK
-        string skillId FK
-        ProficiencyLevel proficiencyLevel
-        SkillSource source
-        datetime createdAt
-        datetime updatedAt
-    }
-    Assessment {
-        string id PK
-        string skillId FK
-        string title
-        string description "nullable"
-        int totalQuestions
-        datetime createdAt
-    }
-    AssessmentQuestion {
-        string id PK
-        string assessmentId FK
-        string question
-        int correctAnswer
-        string explanation "nullable"
-    }
-    AssessmentQuestionOption {
-        string questionId PK, FK
-        int optionPosition PK
-        string optionText
-    }
-    AssessmentResult {
-        string id PK
-        string studentProfileId FK
-        string assessmentId FK
-        int score
-        float percentage
-        ProficiencyLevel proficiencyLevel
-        datetime completedAt
-    }
-    LearningRecommendation {
-        string id PK
-        string studentProfileId FK
-        string skillId FK
-        string title
-        string description
-        ProficiencyLevel difficulty
-        string resourceUrl "nullable"
-        int priority
-        boolean isCompleted
-        datetime createdAt
-    }
-    Company {
-        string id PK
-        string userId FK, UK
-        string name
-        string officialEmail UK
-        string website "nullable"
-        string address "nullable"
-        string description "nullable"
-        string contactInfo "nullable"
-        boolean isVerified
-        datetime createdAt
-        datetime updatedAt
-    }
-    Opportunity {
-        string id PK
-        string companyId FK
-        string title
-        OpportunityType type
-        string description
-        string responsibilities "nullable"
-        string qualifications "nullable"
-        string location "nullable"
-        WorkMode workMode "nullable"
-        string compensation "nullable"
-        int openings
-        string applicationUrl "nullable"
-        datetime applicationDeadline "nullable"
-        datetime startDate "nullable"
-        datetime endDate "nullable"
-        OpportunityStatus status
-        datetime publishedAt "nullable"
-        datetime createdAt
-        datetime updatedAt
-    }
-    Application {
-        string id PK
-        string studentProfileId FK
-        string opportunityId FK
-        ApplicationStatus status
-        string coverLetter "nullable"
-        string recruiterRemarks "nullable"
-        datetime createdAt
-        datetime updatedAt
-    }
-    ApplicationStatusHistory {
-        string id PK
-        string applicationId FK
-        ApplicationStatus status
-        string remarks "nullable"
-        string changedByUserId
-        datetime createdAt
-    }
-    Interview {
-        string id PK
-        string applicationId FK
-        datetime scheduledAt
-        string location "nullable"
-        string meetingUrl "nullable"
-        string notes "nullable"
-        InterviewStatus status
-        datetime createdAt
-        datetime updatedAt
-    }
-    Internship {
-        string id PK
-        string applicationId FK, UK
-        string studentProfileId FK
-        string companyId FK
-        string institutionId FK "nullable"
-        string title
-        datetime startDate "nullable"
-        datetime endDate "nullable"
-        InternshipStatus status
-        string notes "nullable"
-        datetime createdAt
-        datetime updatedAt
-    }
-    Placement {
-        string id PK
-        string studentProfileId FK
-        string institutionId FK "nullable"
-        string companyId FK
-        string role
-        datetime placedAt
-        string compensation "nullable"
-        string notes "nullable"
-        datetime createdAt
-        datetime updatedAt
-    }
-    Notification {
-        string id PK
-        string userId FK
-        string type
-        string title
-        string message
-        string link "nullable"
-        datetime readAt "nullable"
-        datetime createdAt
-    }
-
-    User ||--o| Institution : "account for"
-    User ||--o| StudentProfile : "account for"
-    User ||--o| Company : "account for"
-    User ||--o{ Notification : receives
-    Institution o|--o{ StudentProfile : affiliates
-    Institution o|--o{ Internship : hosts
-    Institution o|--o{ Placement : records
-    StudentProfile ||--o{ StudentSkill : has
-    Skill ||--o{ StudentSkill : assessed_as
-    Skill ||--o{ Assessment : covers
-    Assessment ||--o{ AssessmentQuestion : contains
-    AssessmentQuestion ||--o{ AssessmentQuestionOption : has_options
-    StudentProfile ||--o{ AssessmentResult : earns
-    Assessment ||--o{ AssessmentResult : receives
-    StudentProfile ||--o{ LearningRecommendation : receives
-    Skill ||--o{ LearningRecommendation : recommends_for
-    Company ||--o{ Opportunity : posts
-    StudentProfile ||--o{ Application : submits
-    Opportunity ||--o{ Application : receives
-    Application ||--o{ ApplicationStatusHistory : records
-    Application ||--o{ Interview : schedules
-    Application ||--o| Internship : may_lead_to
-    StudentProfile ||--o{ Internship : undertakes
-    Company ||--o{ Internship : provides
-    StudentProfile ||--o{ Placement : obtains
-    Company ||--o{ Placement : employs
+%% SkillBridge AI ER diagram: all original entities, attributes, and relationships.
+%% Three grouped domains with Crow-foot cardinality labels.
+%%{init: {"theme":"base","themeVariables":{"fontFamily":"Arial, sans-serif","fontSize":"18px","lineColor":"#64748b","primaryTextColor":"#172554","edgeLabelBackground":"#f1f5f9","clusterBkg":"#f8fafc","clusterBorder":"#cbd5e1"},"flowchart":{"htmlLabels":true,"curve":"linear","nodeSpacing":38,"rankSpacing":62,"padding":14}}}%%
+flowchart LR
+    subgraph accounts["Accounts & Profiles"]
+        direction TB
+        User["<table style='border-collapse:collapse;background:#ffffff;font-size:16px;line-height:1.25'><tr><th colspan='2' style='background:#dbeafe;color:#1d4ed8;font-size:20px;text-align:left;padding:8px 12px;border-bottom:2px solid #1d4ed8'>User</th></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>string</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>id</b> PK</td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>string</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>fullName</b></td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>string</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>email</b> UK</td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>string</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>password</b></td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>string</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>phone</b> &quot;nullable&quot;</td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>Role</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>role</b></td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>boolean</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>isActive</b></td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>datetime</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>createdAt</b></td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>datetime</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>updatedAt</b></td></tr></table>"]
+        Institution["<table style='border-collapse:collapse;background:#ffffff;font-size:16px;line-height:1.25'><tr><th colspan='2' style='background:#dbeafe;color:#1d4ed8;font-size:20px;text-align:left;padding:8px 12px;border-bottom:2px solid #1d4ed8'>Institution</th></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>string</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>id</b> PK</td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>string</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>userId</b> FK, UK</td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>string</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>name</b></td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>string</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>officialEmail</b> UK</td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>string</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>website</b> &quot;nullable&quot;</td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>string</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>address</b> &quot;nullable&quot;</td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>string</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>description</b> &quot;nullable&quot;</td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>string</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>contactInfo</b> &quot;nullable&quot;</td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>boolean</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>isVerified</b></td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>datetime</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>createdAt</b></td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>datetime</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>updatedAt</b></td></tr></table>"]
+        StudentProfile["<table style='border-collapse:collapse;background:#ffffff;font-size:16px;line-height:1.25'><tr><th colspan='2' style='background:#dbeafe;color:#1d4ed8;font-size:20px;text-align:left;padding:8px 12px;border-bottom:2px solid #1d4ed8'>StudentProfile</th></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>string</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>id</b> PK</td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>string</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>userId</b> FK, UK</td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>string</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>institutionId</b> FK &quot;nullable&quot;</td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>string</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>degree</b> &quot;nullable&quot;</td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>string</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>department</b> &quot;nullable&quot;</td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>int</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>graduationYear</b> &quot;nullable&quot;</td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>int</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>semester</b> &quot;nullable&quot;</td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>string</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>bio</b> &quot;nullable&quot;</td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>string</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>profileImage</b> &quot;nullable&quot;</td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>string</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>resumeUrl</b> &quot;nullable&quot;</td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>string</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>linkedIn</b> &quot;nullable&quot;</td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>string</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>github</b> &quot;nullable&quot;</td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>string</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>portfolio</b> &quot;nullable&quot;</td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>datetime</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>createdAt</b></td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>datetime</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>updatedAt</b></td></tr></table>"]
+        Notification["<table style='border-collapse:collapse;background:#ffffff;font-size:16px;line-height:1.25'><tr><th colspan='2' style='background:#dbeafe;color:#1d4ed8;font-size:20px;text-align:left;padding:8px 12px;border-bottom:2px solid #1d4ed8'>Notification</th></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>string</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>id</b> PK</td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>string</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>userId</b> FK</td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>string</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>type</b></td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>string</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>title</b></td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>string</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>message</b></td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>string</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>link</b> &quot;nullable&quot;</td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>datetime</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>readAt</b> &quot;nullable&quot;</td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>datetime</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>createdAt</b></td></tr></table>"]
+    end
+    subgraph learning["Skills & Assessment"]
+        direction TB
+        Skill["<table style='border-collapse:collapse;background:#ffffff;font-size:16px;line-height:1.25'><tr><th colspan='2' style='background:#dcfce7;color:#15803d;font-size:20px;text-align:left;padding:8px 12px;border-bottom:2px solid #15803d'>Skill</th></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>string</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>id</b> PK</td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>string</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>name</b> UK</td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>string</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>category</b></td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>string</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>description</b> &quot;nullable&quot;</td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>datetime</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>createdAt</b></td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>datetime</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>updatedAt</b></td></tr></table>"]
+        StudentSkill["<table style='border-collapse:collapse;background:#ffffff;font-size:16px;line-height:1.25'><tr><th colspan='2' style='background:#dcfce7;color:#15803d;font-size:20px;text-align:left;padding:8px 12px;border-bottom:2px solid #15803d'>StudentSkill</th></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>string</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>id</b> PK</td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>string</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>studentProfileId</b> FK</td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>string</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>skillId</b> FK</td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>ProficiencyLevel</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>proficiencyLevel</b></td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>SkillSource</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>source</b></td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>datetime</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>createdAt</b></td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>datetime</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>updatedAt</b></td></tr><tr><td colspan='2' style='background:#f8fafc;padding:5px 8px;border-top:1px solid #cbd5e1'><b>Composite UK:</b> studentProfileId + skillId</td></tr></table>"]
+        LearningRecommendation["<table style='border-collapse:collapse;background:#ffffff;font-size:16px;line-height:1.25'><tr><th colspan='2' style='background:#dcfce7;color:#15803d;font-size:20px;text-align:left;padding:8px 12px;border-bottom:2px solid #15803d'>LearningRecommendation</th></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>string</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>id</b> PK</td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>string</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>studentProfileId</b> FK</td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>string</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>skillId</b> FK</td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>string</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>title</b></td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>string</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>description</b></td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>ProficiencyLevel</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>difficulty</b></td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>string</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>resourceUrl</b> &quot;nullable&quot;</td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>int</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>priority</b></td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>boolean</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>isCompleted</b></td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>datetime</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>createdAt</b></td></tr></table>"]
+        Assessment["<table style='border-collapse:collapse;background:#ffffff;font-size:16px;line-height:1.25'><tr><th colspan='2' style='background:#dcfce7;color:#15803d;font-size:20px;text-align:left;padding:8px 12px;border-bottom:2px solid #15803d'>Assessment</th></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>string</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>id</b> PK</td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>string</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>skillId</b> FK</td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>string</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>title</b></td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>string</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>description</b> &quot;nullable&quot;</td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>int</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>totalQuestions</b></td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>datetime</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>createdAt</b></td></tr></table>"]
+        AssessmentQuestion["<table style='border-collapse:collapse;background:#ffffff;font-size:16px;line-height:1.25'><tr><th colspan='2' style='background:#dcfce7;color:#15803d;font-size:20px;text-align:left;padding:8px 12px;border-bottom:2px solid #15803d'>AssessmentQuestion</th></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>string</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>id</b> PK</td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>string</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>assessmentId</b> FK</td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>string</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>question</b></td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>int</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>correctAnswer</b></td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>string</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>explanation</b> &quot;nullable&quot;</td></tr></table>"]
+        AssessmentQuestionOption["<table style='border-collapse:collapse;background:#ffffff;font-size:16px;line-height:1.25'><tr><th colspan='2' style='background:#dcfce7;color:#15803d;font-size:20px;text-align:left;padding:8px 12px;border-bottom:2px solid #15803d'>AssessmentQuestionOption</th></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>string</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>questionId</b> PK, FK</td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>int</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>optionPosition</b> PK</td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>string</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>optionText</b></td></tr></table>"]
+        AssessmentResult["<table style='border-collapse:collapse;background:#ffffff;font-size:16px;line-height:1.25'><tr><th colspan='2' style='background:#dcfce7;color:#15803d;font-size:20px;text-align:left;padding:8px 12px;border-bottom:2px solid #15803d'>AssessmentResult</th></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>string</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>id</b> PK</td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>string</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>studentProfileId</b> FK</td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>string</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>assessmentId</b> FK</td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>int</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>score</b></td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>float</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>percentage</b></td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>ProficiencyLevel</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>proficiencyLevel</b></td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>datetime</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>completedAt</b></td></tr></table>"]
+    end
+    subgraph career["Career & Outcomes"]
+        direction TB
+        Company["<table style='border-collapse:collapse;background:#ffffff;font-size:16px;line-height:1.25'><tr><th colspan='2' style='background:#ffedd5;color:#c2410c;font-size:20px;text-align:left;padding:8px 12px;border-bottom:2px solid #c2410c'>Company</th></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>string</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>id</b> PK</td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>string</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>userId</b> FK, UK</td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>string</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>name</b></td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>string</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>officialEmail</b> UK</td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>string</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>website</b> &quot;nullable&quot;</td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>string</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>address</b> &quot;nullable&quot;</td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>string</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>description</b> &quot;nullable&quot;</td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>string</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>contactInfo</b> &quot;nullable&quot;</td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>boolean</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>isVerified</b></td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>datetime</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>createdAt</b></td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>datetime</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>updatedAt</b></td></tr></table>"]
+        Opportunity["<table style='border-collapse:collapse;background:#ffffff;font-size:16px;line-height:1.25'><tr><th colspan='2' style='background:#ffedd5;color:#c2410c;font-size:20px;text-align:left;padding:8px 12px;border-bottom:2px solid #c2410c'>Opportunity</th></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>string</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>id</b> PK</td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>string</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>companyId</b> FK</td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>string</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>title</b></td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>OpportunityType</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>type</b></td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>string</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>description</b></td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>string</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>responsibilities</b> &quot;nullable&quot;</td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>string</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>qualifications</b> &quot;nullable&quot;</td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>string</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>location</b> &quot;nullable&quot;</td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>WorkMode</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>workMode</b> &quot;nullable&quot;</td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>string</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>compensation</b> &quot;nullable&quot;</td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>int</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>openings</b></td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>string</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>applicationUrl</b> &quot;nullable&quot;</td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>datetime</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>applicationDeadline</b> &quot;nullable&quot;</td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>datetime</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>startDate</b> &quot;nullable&quot;</td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>datetime</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>endDate</b> &quot;nullable&quot;</td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>OpportunityStatus</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>status</b></td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>datetime</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>publishedAt</b> &quot;nullable&quot;</td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>datetime</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>createdAt</b></td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>datetime</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>updatedAt</b></td></tr></table>"]
+        Application["<table style='border-collapse:collapse;background:#ffffff;font-size:16px;line-height:1.25'><tr><th colspan='2' style='background:#ffedd5;color:#c2410c;font-size:20px;text-align:left;padding:8px 12px;border-bottom:2px solid #c2410c'>Application</th></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>string</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>id</b> PK</td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>string</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>studentProfileId</b> FK</td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>string</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>opportunityId</b> FK</td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>ApplicationStatus</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>status</b></td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>string</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>coverLetter</b> &quot;nullable&quot;</td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>string</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>recruiterRemarks</b> &quot;nullable&quot;</td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>datetime</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>createdAt</b></td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>datetime</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>updatedAt</b></td></tr><tr><td colspan='2' style='background:#f8fafc;padding:5px 8px;border-top:1px solid #cbd5e1'><b>Composite UK:</b> studentProfileId + opportunityId</td></tr></table>"]
+        ApplicationStatusHistory["<table style='border-collapse:collapse;background:#ffffff;font-size:16px;line-height:1.25'><tr><th colspan='2' style='background:#ffedd5;color:#c2410c;font-size:20px;text-align:left;padding:8px 12px;border-bottom:2px solid #c2410c'>ApplicationStatusHistory</th></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>string</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>id</b> PK</td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>string</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>applicationId</b> FK</td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>ApplicationStatus</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>status</b></td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>string</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>remarks</b> &quot;nullable&quot;</td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>string</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>changedByUserId</b></td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>datetime</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>createdAt</b></td></tr></table>"]
+        Interview["<table style='border-collapse:collapse;background:#ffffff;font-size:16px;line-height:1.25'><tr><th colspan='2' style='background:#ffedd5;color:#c2410c;font-size:20px;text-align:left;padding:8px 12px;border-bottom:2px solid #c2410c'>Interview</th></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>string</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>id</b> PK</td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>string</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>applicationId</b> FK</td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>datetime</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>scheduledAt</b></td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>string</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>location</b> &quot;nullable&quot;</td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>string</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>meetingUrl</b> &quot;nullable&quot;</td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>string</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>notes</b> &quot;nullable&quot;</td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>InterviewStatus</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>status</b></td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>datetime</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>createdAt</b></td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>datetime</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>updatedAt</b></td></tr></table>"]
+        Internship["<table style='border-collapse:collapse;background:#ffffff;font-size:16px;line-height:1.25'><tr><th colspan='2' style='background:#ffedd5;color:#c2410c;font-size:20px;text-align:left;padding:8px 12px;border-bottom:2px solid #c2410c'>Internship</th></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>string</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>id</b> PK</td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>string</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>applicationId</b> FK, UK</td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>string</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>studentProfileId</b> FK</td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>string</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>companyId</b> FK</td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>string</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>institutionId</b> FK &quot;nullable&quot;</td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>string</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>title</b></td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>datetime</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>startDate</b> &quot;nullable&quot;</td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>datetime</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>endDate</b> &quot;nullable&quot;</td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>InternshipStatus</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>status</b></td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>string</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>notes</b> &quot;nullable&quot;</td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>datetime</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>createdAt</b></td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>datetime</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>updatedAt</b></td></tr></table>"]
+        Placement["<table style='border-collapse:collapse;background:#ffffff;font-size:16px;line-height:1.25'><tr><th colspan='2' style='background:#ffedd5;color:#c2410c;font-size:20px;text-align:left;padding:8px 12px;border-bottom:2px solid #c2410c'>Placement</th></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>string</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>id</b> PK</td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>string</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>studentProfileId</b> FK</td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>string</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>institutionId</b> FK &quot;nullable&quot;</td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>string</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>companyId</b> FK</td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>string</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>role</b></td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>datetime</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>placedAt</b></td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>string</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>compensation</b> &quot;nullable&quot;</td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>string</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>notes</b> &quot;nullable&quot;</td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>datetime</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>createdAt</b></td></tr><tr><td style='color:#64748b;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'>datetime</td><td style='color:#0f172a;padding:3px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap'><b>updatedAt</b></td></tr></table>"]
+    end
+    User -->|"1 : 0..1 · account for"| Institution
+    User -->|"1 : 0..1 · account for"| StudentProfile
+    User -->|"1 : 0..1 · account for"| Company
+    User -->|"1 : 0..* · receives"| Notification
+    Institution -->|"0..1 : 0..* · affiliates"| StudentProfile
+    Institution -->|"0..1 : 0..* · hosts"| Internship
+    Institution -->|"0..1 : 0..* · records"| Placement
+    StudentProfile -->|"1 : 0..* · has"| StudentSkill
+    Skill -->|"1 : 0..* · assessed_as"| StudentSkill
+    Skill -->|"1 : 0..* · covers"| Assessment
+    Assessment -->|"1 : 0..* · contains"| AssessmentQuestion
+    AssessmentQuestion -->|"1 : 0..* · has_options"| AssessmentQuestionOption
+    StudentProfile -->|"1 : 0..* · earns"| AssessmentResult
+    Assessment -->|"1 : 0..* · receives"| AssessmentResult
+    StudentProfile -->|"1 : 0..* · receives"| LearningRecommendation
+    Skill -->|"1 : 0..* · recommends_for"| LearningRecommendation
+    Company -->|"1 : 0..* · posts"| Opportunity
+    StudentProfile -->|"1 : 0..* · submits"| Application
+    Opportunity -->|"1 : 0..* · receives"| Application
+    Application -->|"1 : 0..* · records"| ApplicationStatusHistory
+    Application -->|"1 : 0..* · schedules"| Interview
+    Application -->|"1 : 0..1 · may_lead_to"| Internship
+    StudentProfile -->|"1 : 0..* · undertakes"| Internship
+    Company -->|"1 : 0..* · provides"| Internship
+    StudentProfile -->|"1 : 0..* · obtains"| Placement
+    Company -->|"1 : 0..* · employs"| Placement
