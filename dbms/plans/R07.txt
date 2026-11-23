@@ -1,0 +1,53 @@
+Query: R7 (READ)
+Database: skillbridge_ap_cp4
+PostgreSQL: PostgreSQL 16.15 (Homebrew) on aarch64-apple-darwin27.0.0, compiled by Apple clang version 21.0.0 (clang-2100.3.34.2), 64-bit
+Runs: 3
+Parameters: ('industry-user-001',)
+
+SQL:
+SELECT c.*, u."fullName", u."email" FROM "Company" c JOIN "User" u ON u."id"=c."userId" WHERE c."userId"='industry-user-001';
+
+==================== RUN 1: 0.039 ms ====================
+Nested Loop  (cost=0.28..15.81 rows=1 width=198) (actual time=0.010..0.022 rows=1 loops=1)
+  Buffers: shared hit=8
+  ->  Seq Scan on "Company" c  (cost=0.00..7.50 rows=1 width=161) (actual time=0.005..0.015 rows=1 loops=1)
+        Filter: ("userId" = 'industry-user-001'::text)
+        Rows Removed by Filter: 199
+        Buffers: shared hit=5
+  ->  Index Scan using "User_pkey" on "User" u  (cost=0.28..8.30 rows=1 width=55) (actual time=0.004..0.005 rows=1 loops=1)
+        Index Cond: (id = 'industry-user-001'::text)
+        Buffers: shared hit=3
+Planning:
+  Buffers: shared hit=240
+Planning Time: 0.308 ms
+Execution Time: 0.039 ms
+
+==================== RUN 2: 0.037 ms ====================
+Nested Loop  (cost=0.28..15.81 rows=1 width=198) (actual time=0.011..0.021 rows=1 loops=1)
+  Buffers: shared hit=8
+  ->  Seq Scan on "Company" c  (cost=0.00..7.50 rows=1 width=161) (actual time=0.006..0.015 rows=1 loops=1)
+        Filter: ("userId" = 'industry-user-001'::text)
+        Rows Removed by Filter: 199
+        Buffers: shared hit=5
+  ->  Index Scan using "User_pkey" on "User" u  (cost=0.28..8.30 rows=1 width=55) (actual time=0.004..0.004 rows=1 loops=1)
+        Index Cond: (id = 'industry-user-001'::text)
+        Buffers: shared hit=3
+Planning:
+  Buffers: shared hit=240
+Planning Time: 0.280 ms
+Execution Time: 0.037 ms
+
+==================== RUN 3: 0.032 ms ====================
+Nested Loop  (cost=0.28..15.81 rows=1 width=198) (actual time=0.008..0.017 rows=1 loops=1)
+  Buffers: shared hit=8
+  ->  Seq Scan on "Company" c  (cost=0.00..7.50 rows=1 width=161) (actual time=0.004..0.012 rows=1 loops=1)
+        Filter: ("userId" = 'industry-user-001'::text)
+        Rows Removed by Filter: 199
+        Buffers: shared hit=5
+  ->  Index Scan using "User_pkey" on "User" u  (cost=0.28..8.30 rows=1 width=55) (actual time=0.003..0.003 rows=1 loops=1)
+        Index Cond: (id = 'industry-user-001'::text)
+        Buffers: shared hit=3
+Planning:
+  Buffers: shared hit=240
+Planning Time: 0.270 ms
+Execution Time: 0.032 ms

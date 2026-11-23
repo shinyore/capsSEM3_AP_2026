@@ -1,0 +1,44 @@
+Query: W37 (WRITE)
+Database: skillbridge_ap_cp4
+PostgreSQL: PostgreSQL 16.15 (Homebrew) on aarch64-apple-darwin27.0.0, compiled by Apple clang version 21.0.0 (clang-2100.3.34.2), 64-bit
+Runs: 3
+Parameters: ('notification-000001', 'student-user-00001')
+
+SQL:
+UPDATE "Notification" SET "readAt"=COALESCE("readAt",CURRENT_TIMESTAMP) WHERE "id"='notification-000001' AND "userId"='student-user-00001';
+
+==================== RUN 1: 0.127 ms ====================
+Update on "Notification"  (cost=0.29..8.32 rows=0 width=0) (actual time=0.089..0.090 rows=0 loops=1)
+  Buffers: shared hit=19
+  ->  Index Scan using "Notification_pkey" on "Notification"  (cost=0.29..8.32 rows=1 width=14) (actual time=0.009..0.009 rows=1 loops=1)
+        Index Cond: (id = 'notification-000001'::text)
+        Filter: ("userId" = 'student-user-00001'::text)
+        Buffers: shared hit=3
+Planning:
+  Buffers: shared hit=97
+Planning Time: 0.155 ms
+Execution Time: 0.127 ms
+
+==================== RUN 2: 0.091 ms ====================
+Update on "Notification"  (cost=0.29..8.32 rows=0 width=0) (actual time=0.058..0.059 rows=0 loops=1)
+  Buffers: shared hit=21
+  ->  Index Scan using "Notification_pkey" on "Notification"  (cost=0.29..8.32 rows=1 width=14) (actual time=0.010..0.012 rows=1 loops=1)
+        Index Cond: (id = 'notification-000001'::text)
+        Filter: ("userId" = 'student-user-00001'::text)
+        Buffers: shared hit=5
+Planning:
+  Buffers: shared hit=97
+Planning Time: 0.153 ms
+Execution Time: 0.091 ms
+
+==================== RUN 3: 0.094 ms ====================
+Update on "Notification"  (cost=0.29..8.32 rows=0 width=0) (actual time=0.057..0.058 rows=0 loops=1)
+  Buffers: shared hit=21
+  ->  Index Scan using "Notification_pkey" on "Notification"  (cost=0.29..8.32 rows=1 width=14) (actual time=0.010..0.011 rows=1 loops=1)
+        Index Cond: (id = 'notification-000001'::text)
+        Filter: ("userId" = 'student-user-00001'::text)
+        Buffers: shared hit=5
+Planning:
+  Buffers: shared hit=97
+Planning Time: 0.164 ms
+Execution Time: 0.094 ms

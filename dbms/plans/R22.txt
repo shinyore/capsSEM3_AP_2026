@@ -1,0 +1,108 @@
+Query: R22 (READ)
+Database: skillbridge_ap_cp4
+PostgreSQL: PostgreSQL 16.15 (Homebrew) on aarch64-apple-darwin27.0.0, compiled by Apple clang version 21.0.0 (clang-2100.3.34.2), 64-bit
+Runs: 3
+Parameters: ('application-000001', 'student-user-00001')
+
+SQL:
+SELECT h."id",h."status",h."remarks",h."createdAt",h."changedByUserId"
+FROM "ApplicationStatusHistory" h JOIN "Application" a ON a."id"=h."applicationId"
+LEFT JOIN "StudentProfile" sp ON sp."id"=a."studentProfileId"
+LEFT JOIN "Opportunity" o ON o."id"=a."opportunityId" LEFT JOIN "Company" c ON c."id"=o."companyId"
+WHERE a."id"='application-000001' AND (sp."userId"='student-user-00001' OR c."userId"='student-user-00001') ORDER BY h."createdAt";
+
+==================== RUN 1: 0.070 ms ====================
+Nested Loop  (cost=1.28..37.32 rows=1 width=87) (actual time=0.027..0.038 rows=2 loops=1)
+  Buffers: shared hit=21
+  ->  Index Scan using "ApplicationStatusHistory_applicationId_createdAt_idx" on "ApplicationStatusHistory" h  (cost=0.29..12.18 rows=2 width=106) (actual time=0.007..0.011 rows=2 loops=1)
+        Index Cond: ("applicationId" = 'application-000001'::text)
+        Buffers: shared hit=6
+  ->  Materialize  (cost=0.99..25.12 rows=1 width=19) (actual time=0.010..0.012 rows=1 loops=2)
+        Buffers: shared hit=15
+        ->  Nested Loop Left Join  (cost=0.99..25.11 rows=1 width=19) (actual time=0.018..0.024 rows=1 loops=1)
+              Filter: ((sp."userId" = 'student-user-00001'::text) OR (c."userId" = 'student-user-00001'::text))
+              Buffers: shared hit=15
+              ->  Nested Loop Left Join  (cost=0.57..16.61 rows=1 width=55) (actual time=0.010..0.014 rows=1 loops=1)
+                    Buffers: shared hit=8
+                    ->  Index Scan using "Application_pkey" on "Application" a  (cost=0.29..8.30 rows=1 width=58) (actual time=0.005..0.009 rows=1 loops=1)
+                          Index Cond: (id = 'application-000001'::text)
+                          Buffers: shared hit=5
+                    ->  Index Scan using "StudentProfile_pkey" on "StudentProfile" sp  (cost=0.28..8.30 rows=1 width=41) (actual time=0.003..0.003 rows=1 loops=1)
+                          Index Cond: (id = a."studentProfileId")
+                          Buffers: shared hit=3
+              ->  Nested Loop Left Join  (cost=0.42..8.49 rows=1 width=35) (actual time=0.007..0.008 rows=1 loops=1)
+                    Buffers: shared hit=7
+                    ->  Index Scan using "Opportunity_pkey" on "Opportunity" o  (cost=0.28..8.29 rows=1 width=29) (actual time=0.003..0.004 rows=1 loops=1)
+                          Index Cond: (id = a."opportunityId")
+                          Buffers: shared hit=5
+                    ->  Index Scan using "Company_pkey" on "Company" c  (cost=0.14..0.19 rows=1 width=30) (actual time=0.003..0.003 rows=1 loops=1)
+                          Index Cond: (id = o."companyId")
+                          Buffers: shared hit=2
+Planning:
+  Buffers: shared hit=586
+Planning Time: 0.959 ms
+Execution Time: 0.070 ms
+
+==================== RUN 2: 0.056 ms ====================
+Nested Loop  (cost=1.28..37.32 rows=1 width=87) (actual time=0.020..0.024 rows=2 loops=1)
+  Buffers: shared hit=15
+  ->  Index Scan using "ApplicationStatusHistory_applicationId_createdAt_idx" on "ApplicationStatusHistory" h  (cost=0.29..12.18 rows=2 width=106) (actual time=0.006..0.008 rows=2 loops=1)
+        Index Cond: ("applicationId" = 'application-000001'::text)
+        Buffers: shared hit=4
+  ->  Materialize  (cost=0.99..25.12 rows=1 width=19) (actual time=0.007..0.008 rows=1 loops=2)
+        Buffers: shared hit=11
+        ->  Nested Loop Left Join  (cost=0.99..25.11 rows=1 width=19) (actual time=0.013..0.014 rows=1 loops=1)
+              Filter: ((sp."userId" = 'student-user-00001'::text) OR (c."userId" = 'student-user-00001'::text))
+              Buffers: shared hit=11
+              ->  Nested Loop Left Join  (cost=0.57..16.61 rows=1 width=55) (actual time=0.008..0.008 rows=1 loops=1)
+                    Buffers: shared hit=6
+                    ->  Index Scan using "Application_pkey" on "Application" a  (cost=0.29..8.30 rows=1 width=58) (actual time=0.005..0.005 rows=1 loops=1)
+                          Index Cond: (id = 'application-000001'::text)
+                          Buffers: shared hit=3
+                    ->  Index Scan using "StudentProfile_pkey" on "StudentProfile" sp  (cost=0.28..8.30 rows=1 width=41) (actual time=0.002..0.002 rows=1 loops=1)
+                          Index Cond: (id = a."studentProfileId")
+                          Buffers: shared hit=3
+              ->  Nested Loop Left Join  (cost=0.42..8.49 rows=1 width=35) (actual time=0.005..0.005 rows=1 loops=1)
+                    Buffers: shared hit=5
+                    ->  Index Scan using "Opportunity_pkey" on "Opportunity" o  (cost=0.28..8.29 rows=1 width=29) (actual time=0.002..0.003 rows=1 loops=1)
+                          Index Cond: (id = a."opportunityId")
+                          Buffers: shared hit=3
+                    ->  Index Scan using "Company_pkey" on "Company" c  (cost=0.14..0.19 rows=1 width=30) (actual time=0.002..0.002 rows=1 loops=1)
+                          Index Cond: (id = o."companyId")
+                          Buffers: shared hit=2
+Planning:
+  Buffers: shared hit=586
+Planning Time: 0.942 ms
+Execution Time: 0.056 ms
+
+==================== RUN 3: 0.062 ms ====================
+Nested Loop  (cost=1.28..37.32 rows=1 width=87) (actual time=0.020..0.024 rows=2 loops=1)
+  Buffers: shared hit=15
+  ->  Index Scan using "ApplicationStatusHistory_applicationId_createdAt_idx" on "ApplicationStatusHistory" h  (cost=0.29..12.18 rows=2 width=106) (actual time=0.006..0.008 rows=2 loops=1)
+        Index Cond: ("applicationId" = 'application-000001'::text)
+        Buffers: shared hit=4
+  ->  Materialize  (cost=0.99..25.12 rows=1 width=19) (actual time=0.007..0.007 rows=1 loops=2)
+        Buffers: shared hit=11
+        ->  Nested Loop Left Join  (cost=0.99..25.11 rows=1 width=19) (actual time=0.013..0.014 rows=1 loops=1)
+              Filter: ((sp."userId" = 'student-user-00001'::text) OR (c."userId" = 'student-user-00001'::text))
+              Buffers: shared hit=11
+              ->  Nested Loop Left Join  (cost=0.57..16.61 rows=1 width=55) (actual time=0.008..0.008 rows=1 loops=1)
+                    Buffers: shared hit=6
+                    ->  Index Scan using "Application_pkey" on "Application" a  (cost=0.29..8.30 rows=1 width=58) (actual time=0.004..0.005 rows=1 loops=1)
+                          Index Cond: (id = 'application-000001'::text)
+                          Buffers: shared hit=3
+                    ->  Index Scan using "StudentProfile_pkey" on "StudentProfile" sp  (cost=0.28..8.30 rows=1 width=41) (actual time=0.002..0.002 rows=1 loops=1)
+                          Index Cond: (id = a."studentProfileId")
+                          Buffers: shared hit=3
+              ->  Nested Loop Left Join  (cost=0.42..8.49 rows=1 width=35) (actual time=0.005..0.005 rows=1 loops=1)
+                    Buffers: shared hit=5
+                    ->  Index Scan using "Opportunity_pkey" on "Opportunity" o  (cost=0.28..8.29 rows=1 width=29) (actual time=0.002..0.002 rows=1 loops=1)
+                          Index Cond: (id = a."opportunityId")
+                          Buffers: shared hit=3
+                    ->  Index Scan using "Company_pkey" on "Company" c  (cost=0.14..0.19 rows=1 width=30) (actual time=0.002..0.002 rows=1 loops=1)
+                          Index Cond: (id = o."companyId")
+                          Buffers: shared hit=2
+Planning:
+  Buffers: shared hit=586
+Planning Time: 0.954 ms
+Execution Time: 0.062 ms

@@ -1,0 +1,38 @@
+Query: W28 (WRITE)
+Database: skillbridge_ap_cp4
+PostgreSQL: PostgreSQL 16.15 (Homebrew) on aarch64-apple-darwin27.0.0, compiled by Apple clang version 21.0.0 (clang-2100.3.34.2), 64-bit
+Runs: 3
+Parameters: ('bench-created-history-2', 'application-000001', 'UNDER_REVIEW', 'Synthetic update', 'industry-user-001')
+
+SQL:
+INSERT INTO "ApplicationStatusHistory" ("id","applicationId","status","remarks","changedByUserId") VALUES ('bench-created-history-2','application-000001','UNDER_REVIEW','Synthetic update','industry-user-001');
+
+==================== RUN 1: 0.382 ms ====================
+Insert on "ApplicationStatusHistory"  (cost=0.00..0.02 rows=0 width=0) (actual time=0.111..0.112 rows=0 loops=1)
+  Buffers: shared hit=60
+  ->  Result  (cost=0.00..0.02 rows=1 width=140) (actual time=0.006..0.006 rows=1 loops=1)
+Planning:
+  Buffers: shared hit=10
+Planning Time: 0.036 ms
+Trigger for constraint ApplicationStatusHistory_applicationId_fkey: time=0.254 calls=1
+Execution Time: 0.382 ms
+
+==================== RUN 2: 0.428 ms ====================
+Insert on "ApplicationStatusHistory"  (cost=0.00..0.02 rows=0 width=0) (actual time=0.151..0.152 rows=0 loops=1)
+  Buffers: shared hit=61
+  ->  Result  (cost=0.00..0.02 rows=1 width=140) (actual time=0.006..0.006 rows=1 loops=1)
+Planning:
+  Buffers: shared hit=10
+Planning Time: 0.039 ms
+Trigger for constraint ApplicationStatusHistory_applicationId_fkey: time=0.261 calls=1
+Execution Time: 0.428 ms
+
+==================== RUN 3: 0.386 ms ====================
+Insert on "ApplicationStatusHistory"  (cost=0.00..0.02 rows=0 width=0) (actual time=0.110..0.111 rows=0 loops=1)
+  Buffers: shared hit=61
+  ->  Result  (cost=0.00..0.02 rows=1 width=140) (actual time=0.006..0.006 rows=1 loops=1)
+Planning:
+  Buffers: shared hit=10
+Planning Time: 0.036 ms
+Trigger for constraint ApplicationStatusHistory_applicationId_fkey: time=0.259 calls=1
+Execution Time: 0.386 ms

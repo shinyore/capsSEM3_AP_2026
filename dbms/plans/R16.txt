@@ -1,0 +1,80 @@
+Query: R16 (READ)
+Database: skillbridge_ap_cp4
+PostgreSQL: PostgreSQL 16.15 (Homebrew) on aarch64-apple-darwin27.0.0, compiled by Apple clang version 21.0.0 (clang-2100.3.34.2), 64-bit
+Runs: 3
+Parameters: ('student-user-00001',)
+
+SQL:
+SELECT lr."id",lr."title",lr."description",lr."difficulty",lr."resourceUrl",lr."priority",lr."isCompleted",s."name" AS "skillName"
+FROM "LearningRecommendation" lr JOIN "Skill" s ON s."id"=lr."skillId"
+JOIN "StudentProfile" sp ON sp."id"=lr."studentProfileId" WHERE sp."userId"='student-user-00001'
+ORDER BY lr."isCompleted",lr."priority",lr."createdAt" DESC;
+
+==================== RUN 1: 0.050 ms ====================
+Sort  (cost=18.72..18.73 rows=2 width=137) (actual time=0.024..0.025 rows=2 loops=1)
+  Sort Key: lr."isCompleted", lr.priority, lr."createdAt" DESC
+  Sort Method: quicksort  Memory: 25kB
+  Buffers: shared hit=21
+  ->  Nested Loop  (cost=0.71..18.71 rows=2 width=137) (actual time=0.012..0.013 rows=2 loops=1)
+        Buffers: shared hit=10
+        ->  Nested Loop  (cost=0.57..18.39 rows=2 width=137) (actual time=0.009..0.010 rows=2 loops=1)
+              Buffers: shared hit=6
+              ->  Index Scan using "StudentProfile_userId_key" on "StudentProfile" sp  (cost=0.28..8.30 rows=1 width=22) (actual time=0.004..0.004 rows=1 loops=1)
+                    Index Cond: ("userId" = 'student-user-00001'::text)
+                    Buffers: shared hit=3
+              ->  Index Scan using "LearningRecommendation_studentProfileId_isCompleted_priority_id" on "LearningRecommendation" lr  (cost=0.29..10.07 rows=2 width=159) (actual time=0.004..0.004 rows=2 loops=1)
+                    Index Cond: ("studentProfileId" = sp.id)
+                    Buffers: shared hit=3
+        ->  Index Scan using "Skill_pkey" on "Skill" s  (cost=0.14..0.16 rows=1 width=20) (actual time=0.001..0.001 rows=1 loops=2)
+              Index Cond: (id = lr."skillId")
+              Buffers: shared hit=4
+Planning:
+  Buffers: shared hit=403 dirtied=3
+Planning Time: 0.653 ms
+Execution Time: 0.050 ms
+
+==================== RUN 2: 0.043 ms ====================
+Sort  (cost=18.72..18.73 rows=2 width=137) (actual time=0.020..0.021 rows=2 loops=1)
+  Sort Key: lr."isCompleted", lr.priority, lr."createdAt" DESC
+  Sort Method: quicksort  Memory: 25kB
+  Buffers: shared hit=21
+  ->  Nested Loop  (cost=0.71..18.71 rows=2 width=137) (actual time=0.009..0.011 rows=2 loops=1)
+        Buffers: shared hit=10
+        ->  Nested Loop  (cost=0.57..18.39 rows=2 width=137) (actual time=0.007..0.008 rows=2 loops=1)
+              Buffers: shared hit=6
+              ->  Index Scan using "StudentProfile_userId_key" on "StudentProfile" sp  (cost=0.28..8.30 rows=1 width=22) (actual time=0.003..0.003 rows=1 loops=1)
+                    Index Cond: ("userId" = 'student-user-00001'::text)
+                    Buffers: shared hit=3
+              ->  Index Scan using "LearningRecommendation_studentProfileId_isCompleted_priority_id" on "LearningRecommendation" lr  (cost=0.29..10.07 rows=2 width=159) (actual time=0.003..0.003 rows=2 loops=1)
+                    Index Cond: ("studentProfileId" = sp.id)
+                    Buffers: shared hit=3
+        ->  Index Scan using "Skill_pkey" on "Skill" s  (cost=0.14..0.16 rows=1 width=20) (actual time=0.001..0.001 rows=1 loops=2)
+              Index Cond: (id = lr."skillId")
+              Buffers: shared hit=4
+Planning:
+  Buffers: shared hit=403
+Planning Time: 0.533 ms
+Execution Time: 0.043 ms
+
+==================== RUN 3: 0.045 ms ====================
+Sort  (cost=18.72..18.73 rows=2 width=137) (actual time=0.022..0.023 rows=2 loops=1)
+  Sort Key: lr."isCompleted", lr.priority, lr."createdAt" DESC
+  Sort Method: quicksort  Memory: 25kB
+  Buffers: shared hit=21
+  ->  Nested Loop  (cost=0.71..18.71 rows=2 width=137) (actual time=0.009..0.010 rows=2 loops=1)
+        Buffers: shared hit=10
+        ->  Nested Loop  (cost=0.57..18.39 rows=2 width=137) (actual time=0.007..0.007 rows=2 loops=1)
+              Buffers: shared hit=6
+              ->  Index Scan using "StudentProfile_userId_key" on "StudentProfile" sp  (cost=0.28..8.30 rows=1 width=22) (actual time=0.003..0.003 rows=1 loops=1)
+                    Index Cond: ("userId" = 'student-user-00001'::text)
+                    Buffers: shared hit=3
+              ->  Index Scan using "LearningRecommendation_studentProfileId_isCompleted_priority_id" on "LearningRecommendation" lr  (cost=0.29..10.07 rows=2 width=159) (actual time=0.003..0.003 rows=2 loops=1)
+                    Index Cond: ("studentProfileId" = sp.id)
+                    Buffers: shared hit=3
+        ->  Index Scan using "Skill_pkey" on "Skill" s  (cost=0.14..0.16 rows=1 width=20) (actual time=0.001..0.001 rows=1 loops=2)
+              Index Cond: (id = lr."skillId")
+              Buffers: shared hit=4
+Planning:
+  Buffers: shared hit=403
+Planning Time: 0.535 ms
+Execution Time: 0.045 ms

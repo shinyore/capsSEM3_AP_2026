@@ -1,0 +1,44 @@
+Query: R29 (READ)
+Database: skillbridge_ap_cp4
+PostgreSQL: PostgreSQL 16.15 (Homebrew) on aarch64-apple-darwin27.0.0, compiled by Apple clang version 21.0.0 (clang-2100.3.34.2), 64-bit
+Runs: 3
+Parameters: ('student-user-00001',)
+
+SQL:
+SELECT COUNT(*) AS "unreadCount" FROM "Notification" WHERE "userId"='student-user-00001' AND "readAt" IS NULL;
+
+==================== RUN 1: 0.058 ms ====================
+Aggregate  (cost=4.36..4.37 rows=1 width=8) (actual time=0.039..0.040 rows=1 loops=1)
+  Buffers: shared hit=4
+  ->  Index Only Scan using "Notification_userId_readAt_createdAt_idx" on "Notification"  (cost=0.29..4.35 rows=3 width=0) (actual time=0.032..0.035 rows=3 loops=1)
+        Index Cond: (("userId" = 'student-user-00001'::text) AND ("readAt" IS NULL))
+        Heap Fetches: 3
+        Buffers: shared hit=4
+Planning:
+  Buffers: shared hit=94
+Planning Time: 0.168 ms
+Execution Time: 0.058 ms
+
+==================== RUN 2: 0.053 ms ====================
+Aggregate  (cost=4.36..4.37 rows=1 width=8) (actual time=0.028..0.029 rows=1 loops=1)
+  Buffers: shared hit=3
+  ->  Index Only Scan using "Notification_userId_readAt_createdAt_idx" on "Notification"  (cost=0.29..4.35 rows=3 width=0) (actual time=0.024..0.024 rows=3 loops=1)
+        Index Cond: (("userId" = 'student-user-00001'::text) AND ("readAt" IS NULL))
+        Heap Fetches: 0
+        Buffers: shared hit=3
+Planning:
+  Buffers: shared hit=94
+Planning Time: 0.168 ms
+Execution Time: 0.053 ms
+
+==================== RUN 3: 0.042 ms ====================
+Aggregate  (cost=4.36..4.37 rows=1 width=8) (actual time=0.026..0.027 rows=1 loops=1)
+  Buffers: shared hit=3
+  ->  Index Only Scan using "Notification_userId_readAt_createdAt_idx" on "Notification"  (cost=0.29..4.35 rows=3 width=0) (actual time=0.022..0.022 rows=3 loops=1)
+        Index Cond: (("userId" = 'student-user-00001'::text) AND ("readAt" IS NULL))
+        Heap Fetches: 0
+        Buffers: shared hit=3
+Planning:
+  Buffers: shared hit=94
+Planning Time: 0.140 ms
+Execution Time: 0.042 ms

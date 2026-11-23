@@ -1,0 +1,72 @@
+Query: R9 (READ)
+Database: skillbridge_ap_cp4
+PostgreSQL: PostgreSQL 16.15 (Homebrew) on aarch64-apple-darwin27.0.0, compiled by Apple clang version 21.0.0 (clang-2100.3.34.2), 64-bit
+Runs: 3
+Parameters: ()
+
+SQL:
+SELECT c."id", c."name", c."officialEmail", c."isVerified", c."createdAt", u."email" AS "accountEmail"
+FROM "Company" c JOIN "User" u ON u."id"=c."userId" ORDER BY c."createdAt" DESC;
+
+==================== RUN 1: 0.146 ms ====================
+Sort  (cost=47.57..48.17 rows=240 width=86) (actual time=0.114..0.119 rows=200 loops=1)
+  Sort Key: c."createdAt" DESC
+  Sort Method: quicksort  Memory: 47kB
+  Buffers: shared hit=18
+  ->  Merge Join  (cost=23.54..38.08 rows=240 width=86) (actual time=0.052..0.093 rows=200 loops=1)
+        Merge Cond: (u.id = c."userId")
+        Buffers: shared hit=15
+        ->  Index Scan using "User_pkey" on "User" u  (cost=0.28..529.59 rows=5254 width=42) (actual time=0.001..0.015 rows=205 loops=1)
+              Buffers: shared hit=9
+        ->  Sort  (cost=17.89..18.49 rows=240 width=80) (actual time=0.047..0.051 rows=200 loops=1)
+              Sort Key: c."userId"
+              Sort Method: quicksort  Memory: 46kB
+              Buffers: shared hit=6
+              ->  Seq Scan on "Company" c  (cost=0.00..8.40 rows=240 width=80) (actual time=0.001..0.019 rows=200 loops=1)
+                    Buffers: shared hit=6
+Planning:
+  Buffers: shared hit=337
+Planning Time: 0.460 ms
+Execution Time: 0.146 ms
+
+==================== RUN 2: 0.132 ms ====================
+Sort  (cost=47.57..48.17 rows=240 width=86) (actual time=0.106..0.110 rows=200 loops=1)
+  Sort Key: c."createdAt" DESC
+  Sort Method: quicksort  Memory: 47kB
+  Buffers: shared hit=17
+  ->  Merge Join  (cost=23.54..38.08 rows=240 width=86) (actual time=0.048..0.087 rows=200 loops=1)
+        Merge Cond: (u.id = c."userId")
+        Buffers: shared hit=14
+        ->  Index Scan using "User_pkey" on "User" u  (cost=0.28..529.59 rows=5254 width=42) (actual time=0.001..0.014 rows=205 loops=1)
+              Buffers: shared hit=8
+        ->  Sort  (cost=17.89..18.49 rows=240 width=80) (actual time=0.044..0.048 rows=200 loops=1)
+              Sort Key: c."userId"
+              Sort Method: quicksort  Memory: 46kB
+              Buffers: shared hit=6
+              ->  Seq Scan on "Company" c  (cost=0.00..8.40 rows=240 width=80) (actual time=0.002..0.018 rows=200 loops=1)
+                    Buffers: shared hit=6
+Planning:
+  Buffers: shared hit=336
+Planning Time: 0.417 ms
+Execution Time: 0.132 ms
+
+==================== RUN 3: 0.131 ms ====================
+Sort  (cost=47.57..48.17 rows=240 width=86) (actual time=0.100..0.104 rows=200 loops=1)
+  Sort Key: c."createdAt" DESC
+  Sort Method: quicksort  Memory: 47kB
+  Buffers: shared hit=17
+  ->  Merge Join  (cost=23.54..38.08 rows=240 width=86) (actual time=0.045..0.082 rows=200 loops=1)
+        Merge Cond: (u.id = c."userId")
+        Buffers: shared hit=14
+        ->  Index Scan using "User_pkey" on "User" u  (cost=0.28..529.59 rows=5254 width=42) (actual time=0.001..0.013 rows=205 loops=1)
+              Buffers: shared hit=8
+        ->  Sort  (cost=17.89..18.49 rows=240 width=80) (actual time=0.041..0.045 rows=200 loops=1)
+              Sort Key: c."userId"
+              Sort Method: quicksort  Memory: 46kB
+              Buffers: shared hit=6
+              ->  Seq Scan on "Company" c  (cost=0.00..8.40 rows=240 width=80) (actual time=0.001..0.016 rows=200 loops=1)
+                    Buffers: shared hit=6
+Planning:
+  Buffers: shared hit=336
+Planning Time: 0.367 ms
+Execution Time: 0.131 ms

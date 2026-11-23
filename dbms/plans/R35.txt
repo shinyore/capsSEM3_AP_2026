@@ -1,0 +1,119 @@
+Query: R35 (READ)
+Database: skillbridge_ap_cp4
+PostgreSQL: PostgreSQL 16.15 (Homebrew) on aarch64-apple-darwin27.0.0, compiled by Apple clang version 21.0.0 (clang-2100.3.34.2), 64-bit
+Runs: 3
+Parameters: ('institution-user-001',)
+
+SQL:
+SELECT sp."department",c."name" AS "companyName",COUNT(p."id") AS "placementCount"
+FROM "Institution" i JOIN "Placement" p ON p."institutionId"=i."id"
+JOIN "StudentProfile" sp ON sp."id"=p."studentProfileId" JOIN "Company" c ON c."id"=p."companyId"
+WHERE i."userId"='institution-user-001' GROUP BY sp."department",c."name";
+
+==================== RUN 1: 0.092 ms ====================
+GroupAggregate  (cost=41.52..41.72 rows=10 width=32) (actual time=0.059..0.062 rows=7 loops=1)
+  Group Key: sp.department, c.name
+  Buffers: shared hit=69
+  ->  Sort  (cost=41.52..41.55 rows=10 width=39) (actual time=0.055..0.056 rows=10 loops=1)
+        Sort Key: sp.department, c.name
+        Sort Method: quicksort  Memory: 25kB
+        Buffers: shared hit=69
+        ->  Nested Loop  (cost=4.78..41.35 rows=10 width=39) (actual time=0.015..0.045 rows=10 loops=1)
+              Buffers: shared hit=66
+              ->  Nested Loop  (cost=4.63..39.09 rows=10 width=40) (actual time=0.013..0.036 rows=10 loops=1)
+                    Buffers: shared hit=46
+                    ->  Nested Loop  (cost=4.35..19.45 rows=10 width=49) (actual time=0.011..0.020 rows=10 loops=1)
+                          Buffers: shared hit=16
+                          ->  Seq Scan on "Institution" i  (cost=0.00..3.62 rows=1 width=16) (actual time=0.004..0.006 rows=1 loops=1)
+                                Filter: ("userId" = 'institution-user-001'::text)
+                                Rows Removed by Filter: 49
+                                Buffers: shared hit=3
+                          ->  Bitmap Heap Scan on "Placement" p  (cost=4.35..15.72 rows=10 width=65) (actual time=0.007..0.012 rows=10 loops=1)
+                                Recheck Cond: (i.id = "institutionId")
+                                Heap Blocks: exact=11
+                                Buffers: shared hit=13
+                                ->  Bitmap Index Scan on "Placement_institutionId_placedAt_idx"  (cost=0.00..4.35 rows=10 width=0) (actual time=0.003..0.003 rows=16 loops=1)
+                                      Index Cond: ("institutionId" = i.id)
+                                      Buffers: shared hit=2
+                    ->  Index Scan using "StudentProfile_pkey" on "StudentProfile" sp  (cost=0.28..1.96 rows=1 width=35) (actual time=0.001..0.001 rows=1 loops=10)
+                          Index Cond: (id = p."studentProfileId")
+                          Buffers: shared hit=30
+              ->  Index Scan using "Company_pkey" on "Company" c  (cost=0.14..0.23 rows=1 width=23) (actual time=0.001..0.001 rows=1 loops=10)
+                    Index Cond: (id = p."companyId")
+                    Buffers: shared hit=20
+Planning:
+  Buffers: shared hit=391
+Planning Time: 0.639 ms
+Execution Time: 0.092 ms
+
+==================== RUN 2: 0.098 ms ====================
+GroupAggregate  (cost=41.52..41.72 rows=10 width=32) (actual time=0.063..0.066 rows=7 loops=1)
+  Group Key: sp.department, c.name
+  Buffers: shared hit=69
+  ->  Sort  (cost=41.52..41.55 rows=10 width=39) (actual time=0.059..0.060 rows=10 loops=1)
+        Sort Key: sp.department, c.name
+        Sort Method: quicksort  Memory: 25kB
+        Buffers: shared hit=69
+        ->  Nested Loop  (cost=4.78..41.35 rows=10 width=39) (actual time=0.017..0.048 rows=10 loops=1)
+              Buffers: shared hit=66
+              ->  Nested Loop  (cost=4.63..39.09 rows=10 width=40) (actual time=0.015..0.040 rows=10 loops=1)
+                    Buffers: shared hit=46
+                    ->  Nested Loop  (cost=4.35..19.45 rows=10 width=49) (actual time=0.013..0.022 rows=10 loops=1)
+                          Buffers: shared hit=16
+                          ->  Seq Scan on "Institution" i  (cost=0.00..3.62 rows=1 width=16) (actual time=0.004..0.007 rows=1 loops=1)
+                                Filter: ("userId" = 'institution-user-001'::text)
+                                Rows Removed by Filter: 49
+                                Buffers: shared hit=3
+                          ->  Bitmap Heap Scan on "Placement" p  (cost=4.35..15.72 rows=10 width=65) (actual time=0.007..0.013 rows=10 loops=1)
+                                Recheck Cond: (i.id = "institutionId")
+                                Heap Blocks: exact=11
+                                Buffers: shared hit=13
+                                ->  Bitmap Index Scan on "Placement_institutionId_placedAt_idx"  (cost=0.00..4.35 rows=10 width=0) (actual time=0.004..0.004 rows=16 loops=1)
+                                      Index Cond: ("institutionId" = i.id)
+                                      Buffers: shared hit=2
+                    ->  Index Scan using "StudentProfile_pkey" on "StudentProfile" sp  (cost=0.28..1.96 rows=1 width=35) (actual time=0.002..0.002 rows=1 loops=10)
+                          Index Cond: (id = p."studentProfileId")
+                          Buffers: shared hit=30
+              ->  Index Scan using "Company_pkey" on "Company" c  (cost=0.14..0.23 rows=1 width=23) (actual time=0.001..0.001 rows=1 loops=10)
+                    Index Cond: (id = p."companyId")
+                    Buffers: shared hit=20
+Planning:
+  Buffers: shared hit=391
+Planning Time: 0.678 ms
+Execution Time: 0.098 ms
+
+==================== RUN 3: 0.086 ms ====================
+GroupAggregate  (cost=41.52..41.72 rows=10 width=32) (actual time=0.054..0.056 rows=7 loops=1)
+  Group Key: sp.department, c.name
+  Buffers: shared hit=69
+  ->  Sort  (cost=41.52..41.55 rows=10 width=39) (actual time=0.050..0.051 rows=10 loops=1)
+        Sort Key: sp.department, c.name
+        Sort Method: quicksort  Memory: 25kB
+        Buffers: shared hit=69
+        ->  Nested Loop  (cost=4.78..41.35 rows=10 width=39) (actual time=0.013..0.040 rows=10 loops=1)
+              Buffers: shared hit=66
+              ->  Nested Loop  (cost=4.63..39.09 rows=10 width=40) (actual time=0.011..0.033 rows=10 loops=1)
+                    Buffers: shared hit=46
+                    ->  Nested Loop  (cost=4.35..19.45 rows=10 width=49) (actual time=0.010..0.018 rows=10 loops=1)
+                          Buffers: shared hit=16
+                          ->  Seq Scan on "Institution" i  (cost=0.00..3.62 rows=1 width=16) (actual time=0.003..0.005 rows=1 loops=1)
+                                Filter: ("userId" = 'institution-user-001'::text)
+                                Rows Removed by Filter: 49
+                                Buffers: shared hit=3
+                          ->  Bitmap Heap Scan on "Placement" p  (cost=4.35..15.72 rows=10 width=65) (actual time=0.006..0.011 rows=10 loops=1)
+                                Recheck Cond: (i.id = "institutionId")
+                                Heap Blocks: exact=11
+                                Buffers: shared hit=13
+                                ->  Bitmap Index Scan on "Placement_institutionId_placedAt_idx"  (cost=0.00..4.35 rows=10 width=0) (actual time=0.003..0.003 rows=16 loops=1)
+                                      Index Cond: ("institutionId" = i.id)
+                                      Buffers: shared hit=2
+                    ->  Index Scan using "StudentProfile_pkey" on "StudentProfile" sp  (cost=0.28..1.96 rows=1 width=35) (actual time=0.001..0.001 rows=1 loops=10)
+                          Index Cond: (id = p."studentProfileId")
+                          Buffers: shared hit=30
+              ->  Index Scan using "Company_pkey" on "Company" c  (cost=0.14..0.23 rows=1 width=23) (actual time=0.001..0.001 rows=1 loops=10)
+                    Index Cond: (id = p."companyId")
+                    Buffers: shared hit=20
+Planning:
+  Buffers: shared hit=391
+Planning Time: 0.657 ms
+Execution Time: 0.086 ms

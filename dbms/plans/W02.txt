@@ -1,0 +1,35 @@
+Query: W2 (WRITE)
+Database: skillbridge_ap_cp4
+PostgreSQL: PostgreSQL 16.15 (Homebrew) on aarch64-apple-darwin27.0.0, compiled by Apple clang version 21.0.0 (clang-2100.3.34.2), 64-bit
+Runs: 3
+Parameters: ('bench-created-student-profile', 'bench-w2-user')
+
+SQL:
+INSERT INTO "StudentProfile" ("id", "userId", "updatedAt") VALUES ('bench-created-student-profile', 'bench-w2-user', CURRENT_TIMESTAMP);
+
+==================== RUN 1: 0.388 ms ====================
+Insert on "StudentProfile"  (cost=0.00..0.03 rows=0 width=0) (actual time=0.153..0.154 rows=0 loops=1)
+  Buffers: shared hit=86 dirtied=4
+  ->  Result  (cost=0.00..0.03 rows=1 width=376) (actual time=0.005..0.006 rows=1 loops=1)
+Planning Time: 0.027 ms
+Trigger for constraint StudentProfile_userId_fkey: time=0.209 calls=1
+Trigger for constraint StudentProfile_institutionId_fkey: time=0.007 calls=1
+Execution Time: 0.388 ms
+
+==================== RUN 2: 0.315 ms ====================
+Insert on "StudentProfile"  (cost=0.00..0.03 rows=0 width=0) (actual time=0.102..0.103 rows=0 loops=1)
+  Buffers: shared hit=87
+  ->  Result  (cost=0.00..0.03 rows=1 width=376) (actual time=0.005..0.005 rows=1 loops=1)
+Planning Time: 0.022 ms
+Trigger for constraint StudentProfile_userId_fkey: time=0.190 calls=1
+Trigger for constraint StudentProfile_institutionId_fkey: time=0.007 calls=1
+Execution Time: 0.315 ms
+
+==================== RUN 3: 0.343 ms ====================
+Insert on "StudentProfile"  (cost=0.00..0.03 rows=0 width=0) (actual time=0.105..0.106 rows=0 loops=1)
+  Buffers: shared hit=87
+  ->  Result  (cost=0.00..0.03 rows=1 width=376) (actual time=0.005..0.006 rows=1 loops=1)
+Planning Time: 0.025 ms
+Trigger for constraint StudentProfile_userId_fkey: time=0.213 calls=1
+Trigger for constraint StudentProfile_institutionId_fkey: time=0.007 calls=1
+Execution Time: 0.343 ms

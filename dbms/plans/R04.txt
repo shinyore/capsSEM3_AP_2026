@@ -1,0 +1,59 @@
+Query: R4 (READ)
+Database: skillbridge_ap_cp4
+PostgreSQL: PostgreSQL 16.15 (Homebrew) on aarch64-apple-darwin27.0.0, compiled by Apple clang version 21.0.0 (clang-2100.3.34.2), 64-bit
+Runs: 3
+Parameters: ('STUDENT', True, 25, 0)
+
+SQL:
+SELECT "id", "fullName", "email", "phone", "role", "isActive", "createdAt"
+FROM "User" WHERE ('STUDENT'::"Role" IS NULL OR "role" = 'STUDENT')
+  AND (TRUE::BOOLEAN IS NULL OR "isActive" = TRUE)
+ORDER BY "createdAt" DESC LIMIT 25 OFFSET 0;
+
+==================== RUN 1: 0.686 ms ====================
+Limit  (cost=283.61..283.67 rows=25 width=81) (actual time=0.675..0.677 rows=25 loops=1)
+  Buffers: shared hit=94
+  ->  Sort  (cost=283.61..294.85 rows=4498 width=81) (actual time=0.674..0.675 rows=25 loops=1)
+        Sort Key: "createdAt" DESC
+        Sort Method: top-N heapsort  Memory: 28kB
+        Buffers: shared hit=94
+        ->  Seq Scan on "User"  (cost=0.00..156.68 rows=4498 width=81) (actual time=0.008..0.347 rows=4501 loops=1)
+              Filter: ("isActive" AND (role = 'STUDENT'::"Role"))
+              Rows Removed by Filter: 753
+              Buffers: shared hit=91
+Planning:
+  Buffers: shared hit=147
+Planning Time: 0.184 ms
+Execution Time: 0.686 ms
+
+==================== RUN 2: 0.645 ms ====================
+Limit  (cost=283.61..283.67 rows=25 width=81) (actual time=0.636..0.638 rows=25 loops=1)
+  Buffers: shared hit=94
+  ->  Sort  (cost=283.61..294.85 rows=4498 width=81) (actual time=0.635..0.636 rows=25 loops=1)
+        Sort Key: "createdAt" DESC
+        Sort Method: top-N heapsort  Memory: 28kB
+        Buffers: shared hit=94
+        ->  Seq Scan on "User"  (cost=0.00..156.68 rows=4498 width=81) (actual time=0.005..0.317 rows=4501 loops=1)
+              Filter: ("isActive" AND (role = 'STUDENT'::"Role"))
+              Rows Removed by Filter: 753
+              Buffers: shared hit=91
+Planning:
+  Buffers: shared hit=147
+Planning Time: 0.167 ms
+Execution Time: 0.645 ms
+
+==================== RUN 3: 0.674 ms ====================
+Limit  (cost=283.61..283.67 rows=25 width=81) (actual time=0.663..0.666 rows=25 loops=1)
+  Buffers: shared hit=94
+  ->  Sort  (cost=283.61..294.85 rows=4498 width=81) (actual time=0.663..0.664 rows=25 loops=1)
+        Sort Key: "createdAt" DESC
+        Sort Method: top-N heapsort  Memory: 28kB
+        Buffers: shared hit=94
+        ->  Seq Scan on "User"  (cost=0.00..156.68 rows=4498 width=81) (actual time=0.006..0.340 rows=4501 loops=1)
+              Filter: ("isActive" AND (role = 'STUDENT'::"Role"))
+              Rows Removed by Filter: 753
+              Buffers: shared hit=91
+Planning:
+  Buffers: shared hit=147
+Planning Time: 0.225 ms
+Execution Time: 0.674 ms

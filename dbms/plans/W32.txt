@@ -1,0 +1,91 @@
+Query: W32 (WRITE)
+Database: skillbridge_ap_cp4
+PostgreSQL: PostgreSQL 16.15 (Homebrew) on aarch64-apple-darwin27.0.0, compiled by Apple clang version 21.0.0 (clang-2100.3.34.2), 64-bit
+Runs: 3
+Parameters: ('industry-user-004', 'interview-00001', '2027-01-11 10:00:00', 'Updated location', 'https://example.test/meeting2', 'Updated notes', 'CANCELLED')
+
+SQL:
+UPDATE "Interview" i SET "scheduledAt"=COALESCE('2027-01-11 10:00:00',i."scheduledAt"),"location"=COALESCE('Updated location',i."location"),"meetingUrl"=COALESCE('https://example.test/meeting2',i."meetingUrl"),"notes"=COALESCE('Updated notes',i."notes"),"status"=COALESCE('CANCELLED',i."status"),"updatedAt"=CURRENT_TIMESTAMP
+FROM "Application" a JOIN "Opportunity" o ON o."id"=a."opportunityId" JOIN "Company" c ON c."id"=o."companyId"
+WHERE i."applicationId"=a."id" AND c."userId"='industry-user-004' AND i."id"='interview-00001';
+
+==================== RUN 1: 0.119 ms ====================
+Update on "Interview" i  (cost=0.99..17.16 rows=0 width=0) (actual time=0.074..0.075 rows=0 loops=1)
+  Buffers: shared hit=27
+  ->  Nested Loop  (cost=0.99..17.16 rows=1 width=140) (actual time=0.018..0.018 rows=1 loops=1)
+        Buffers: shared hit=11
+        ->  Nested Loop  (cost=0.85..16.91 rows=1 width=30) (actual time=0.011..0.012 rows=1 loops=1)
+              Buffers: shared hit=9
+              ->  Nested Loop  (cost=0.57..16.61 rows=1 width=29) (actual time=0.008..0.009 rows=1 loops=1)
+                    Buffers: shared hit=6
+                    ->  Index Scan using "Interview_pkey" on "Interview" i  (cost=0.28..8.30 rows=1 width=25) (actual time=0.006..0.006 rows=1 loops=1)
+                          Index Cond: (id = 'interview-00001'::text)
+                          Buffers: shared hit=3
+                    ->  Index Scan using "Application_pkey" on "Application" a  (cost=0.29..8.30 rows=1 width=42) (actual time=0.002..0.002 rows=1 loops=1)
+                          Index Cond: (id = i."applicationId")
+                          Buffers: shared hit=3
+              ->  Index Scan using "Opportunity_pkey" on "Opportunity" o  (cost=0.28..0.30 rows=1 width=35) (actual time=0.003..0.003 rows=1 loops=1)
+                    Index Cond: (id = a."opportunityId")
+                    Buffers: shared hit=3
+        ->  Index Scan using "Company_pkey" on "Company" c  (cost=0.14..0.19 rows=1 width=18) (actual time=0.003..0.003 rows=1 loops=1)
+              Index Cond: (id = o."companyId")
+              Filter: ("userId" = 'industry-user-004'::text)
+              Buffers: shared hit=2
+Planning:
+  Buffers: shared hit=500
+Planning Time: 0.828 ms
+Execution Time: 0.119 ms
+
+==================== RUN 2: 0.109 ms ====================
+Update on "Interview" i  (cost=0.99..17.16 rows=0 width=0) (actual time=0.065..0.066 rows=0 loops=1)
+  Buffers: shared hit=29
+  ->  Nested Loop  (cost=0.99..17.16 rows=1 width=140) (actual time=0.015..0.016 rows=1 loops=1)
+        Buffers: shared hit=13
+        ->  Nested Loop  (cost=0.85..16.91 rows=1 width=30) (actual time=0.009..0.010 rows=1 loops=1)
+              Buffers: shared hit=11
+              ->  Nested Loop  (cost=0.57..16.61 rows=1 width=29) (actual time=0.007..0.007 rows=1 loops=1)
+                    Buffers: shared hit=8
+                    ->  Index Scan using "Interview_pkey" on "Interview" i  (cost=0.28..8.30 rows=1 width=25) (actual time=0.005..0.005 rows=1 loops=1)
+                          Index Cond: (id = 'interview-00001'::text)
+                          Buffers: shared hit=5
+                    ->  Index Scan using "Application_pkey" on "Application" a  (cost=0.29..8.30 rows=1 width=42) (actual time=0.002..0.002 rows=1 loops=1)
+                          Index Cond: (id = i."applicationId")
+                          Buffers: shared hit=3
+              ->  Index Scan using "Opportunity_pkey" on "Opportunity" o  (cost=0.28..0.30 rows=1 width=35) (actual time=0.003..0.003 rows=1 loops=1)
+                    Index Cond: (id = a."opportunityId")
+                    Buffers: shared hit=3
+        ->  Index Scan using "Company_pkey" on "Company" c  (cost=0.14..0.19 rows=1 width=18) (actual time=0.003..0.003 rows=1 loops=1)
+              Index Cond: (id = o."companyId")
+              Filter: ("userId" = 'industry-user-004'::text)
+              Buffers: shared hit=2
+Planning:
+  Buffers: shared hit=501
+Planning Time: 0.814 ms
+Execution Time: 0.109 ms
+
+==================== RUN 3: 0.102 ms ====================
+Update on "Interview" i  (cost=0.99..17.16 rows=0 width=0) (actual time=0.060..0.061 rows=0 loops=1)
+  Buffers: shared hit=29
+  ->  Nested Loop  (cost=0.99..17.16 rows=1 width=140) (actual time=0.014..0.015 rows=1 loops=1)
+        Buffers: shared hit=13
+        ->  Nested Loop  (cost=0.85..16.91 rows=1 width=30) (actual time=0.009..0.010 rows=1 loops=1)
+              Buffers: shared hit=11
+              ->  Nested Loop  (cost=0.57..16.61 rows=1 width=29) (actual time=0.006..0.007 rows=1 loops=1)
+                    Buffers: shared hit=8
+                    ->  Index Scan using "Interview_pkey" on "Interview" i  (cost=0.28..8.30 rows=1 width=25) (actual time=0.005..0.005 rows=1 loops=1)
+                          Index Cond: (id = 'interview-00001'::text)
+                          Buffers: shared hit=5
+                    ->  Index Scan using "Application_pkey" on "Application" a  (cost=0.29..8.30 rows=1 width=42) (actual time=0.001..0.001 rows=1 loops=1)
+                          Index Cond: (id = i."applicationId")
+                          Buffers: shared hit=3
+              ->  Index Scan using "Opportunity_pkey" on "Opportunity" o  (cost=0.28..0.30 rows=1 width=35) (actual time=0.002..0.002 rows=1 loops=1)
+                    Index Cond: (id = a."opportunityId")
+                    Buffers: shared hit=3
+        ->  Index Scan using "Company_pkey" on "Company" c  (cost=0.14..0.19 rows=1 width=18) (actual time=0.002..0.002 rows=1 loops=1)
+              Index Cond: (id = o."companyId")
+              Filter: ("userId" = 'industry-user-004'::text)
+              Buffers: shared hit=2
+Planning:
+  Buffers: shared hit=501
+Planning Time: 0.765 ms
+Execution Time: 0.102 ms

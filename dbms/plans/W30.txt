@@ -1,0 +1,63 @@
+Query: W30 (WRITE)
+Database: skillbridge_ap_cp4
+PostgreSQL: PostgreSQL 16.15 (Homebrew) on aarch64-apple-darwin27.0.0, compiled by Apple clang version 21.0.0 (clang-2100.3.34.2), 64-bit
+Runs: 3
+Parameters: ('student-user-00001', 'application-000001')
+
+SQL:
+UPDATE "Application" a SET "status"='WITHDRAWN',"updatedAt"=CURRENT_TIMESTAMP
+FROM "StudentProfile" sp WHERE a."studentProfileId"=sp."id" AND sp."userId"='student-user-00001' AND a."id"='application-000001' AND a."status" IN ('SUBMITTED','UNDER_REVIEW','SHORTLISTED');
+
+==================== RUN 1: 0.121 ms ====================
+Update on "Application" a  (cost=0.57..16.63 rows=0 width=0) (actual time=0.081..0.082 rows=0 loops=1)
+  Buffers: shared hit=35
+  ->  Nested Loop  (cost=0.57..16.63 rows=1 width=24) (actual time=0.015..0.016 rows=1 loops=1)
+        Join Filter: (a."studentProfileId" = sp.id)
+        Buffers: shared hit=6
+        ->  Index Scan using "Application_pkey" on "Application" a  (cost=0.29..8.31 rows=1 width=28) (actual time=0.008..0.008 rows=1 loops=1)
+              Index Cond: (id = 'application-000001'::text)
+              Filter: (status = ANY ('{SUBMITTED,UNDER_REVIEW,SHORTLISTED}'::"ApplicationStatus"[]))
+              Buffers: shared hit=3
+        ->  Index Scan using "StudentProfile_userId_key" on "StudentProfile" sp  (cost=0.28..8.30 rows=1 width=28) (actual time=0.003..0.003 rows=1 loops=1)
+              Index Cond: ("userId" = 'student-user-00001'::text)
+              Buffers: shared hit=3
+Planning:
+  Buffers: shared hit=381
+Planning Time: 0.487 ms
+Execution Time: 0.121 ms
+
+==================== RUN 2: 0.124 ms ====================
+Update on "Application" a  (cost=0.57..16.63 rows=0 width=0) (actual time=0.084..0.085 rows=0 loops=1)
+  Buffers: shared hit=38
+  ->  Nested Loop  (cost=0.57..16.63 rows=1 width=24) (actual time=0.019..0.021 rows=1 loops=1)
+        Join Filter: (a."studentProfileId" = sp.id)
+        Buffers: shared hit=8
+        ->  Index Scan using "Application_pkey" on "Application" a  (cost=0.29..8.31 rows=1 width=28) (actual time=0.011..0.013 rows=1 loops=1)
+              Index Cond: (id = 'application-000001'::text)
+              Filter: (status = ANY ('{SUBMITTED,UNDER_REVIEW,SHORTLISTED}'::"ApplicationStatus"[]))
+              Buffers: shared hit=5
+        ->  Index Scan using "StudentProfile_userId_key" on "StudentProfile" sp  (cost=0.28..8.30 rows=1 width=28) (actual time=0.003..0.003 rows=1 loops=1)
+              Index Cond: ("userId" = 'student-user-00001'::text)
+              Buffers: shared hit=3
+Planning:
+  Buffers: shared hit=381
+Planning Time: 0.475 ms
+Execution Time: 0.124 ms
+
+==================== RUN 3: 0.194 ms ====================
+Update on "Application" a  (cost=0.57..16.63 rows=0 width=0) (actual time=0.144..0.146 rows=0 loops=1)
+  Buffers: shared hit=38
+  ->  Nested Loop  (cost=0.57..16.63 rows=1 width=24) (actual time=0.023..0.025 rows=1 loops=1)
+        Join Filter: (a."studentProfileId" = sp.id)
+        Buffers: shared hit=8
+        ->  Index Scan using "Application_pkey" on "Application" a  (cost=0.29..8.31 rows=1 width=28) (actual time=0.013..0.015 rows=1 loops=1)
+              Index Cond: (id = 'application-000001'::text)
+              Filter: (status = ANY ('{SUBMITTED,UNDER_REVIEW,SHORTLISTED}'::"ApplicationStatus"[]))
+              Buffers: shared hit=5
+        ->  Index Scan using "StudentProfile_userId_key" on "StudentProfile" sp  (cost=0.28..8.30 rows=1 width=28) (actual time=0.003..0.004 rows=1 loops=1)
+              Index Cond: ("userId" = 'student-user-00001'::text)
+              Buffers: shared hit=3
+Planning:
+  Buffers: shared hit=381
+Planning Time: 0.534 ms
+Execution Time: 0.194 ms

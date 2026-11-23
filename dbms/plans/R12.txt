@@ -1,0 +1,69 @@
+Query: R12 (READ)
+Database: skillbridge_ap_cp4
+PostgreSQL: PostgreSQL 16.15 (Homebrew) on aarch64-apple-darwin27.0.0, compiled by Apple clang version 21.0.0 (clang-2100.3.34.2), 64-bit
+Runs: 3
+Parameters: ()
+
+SQL:
+SELECT a."id",a."title",a."description",a."totalQuestions",s."id" AS "skillId",s."name" AS "skillName"
+FROM "Assessment" a JOIN "Skill" s ON s."id"=a."skillId" ORDER BY s."name",a."title";
+
+==================== RUN 1: 0.066 ms ====================
+Sort  (cost=10.85..11.10 rows=100 width=75) (actual time=0.044..0.047 rows=100 loops=1)
+  Sort Key: s.name, a.title
+  Sort Method: quicksort  Memory: 35kB
+  Buffers: shared hit=7
+  ->  Hash Join  (cost=4.25..7.52 rows=100 width=75) (actual time=0.018..0.028 rows=100 loops=1)
+        Hash Cond: (a."skillId" = s.id)
+        Buffers: shared hit=4
+        ->  Seq Scan on "Assessment" a  (cost=0.00..3.00 rows=100 width=65) (actual time=0.001..0.003 rows=100 loops=1)
+              Buffers: shared hit=2
+        ->  Hash  (cost=3.00..3.00 rows=100 width=20) (actual time=0.012..0.012 rows=100 loops=1)
+              Buckets: 1024  Batches: 1  Memory Usage: 14kB
+              Buffers: shared hit=2
+              ->  Seq Scan on "Skill" s  (cost=0.00..3.00 rows=100 width=20) (actual time=0.001..0.005 rows=100 loops=1)
+                    Buffers: shared hit=2
+Planning:
+  Buffers: shared hit=188
+Planning Time: 0.325 ms
+Execution Time: 0.066 ms
+
+==================== RUN 2: 0.071 ms ====================
+Sort  (cost=10.85..11.10 rows=100 width=75) (actual time=0.050..0.053 rows=100 loops=1)
+  Sort Key: s.name, a.title
+  Sort Method: quicksort  Memory: 35kB
+  Buffers: shared hit=7
+  ->  Hash Join  (cost=4.25..7.52 rows=100 width=75) (actual time=0.017..0.027 rows=100 loops=1)
+        Hash Cond: (a."skillId" = s.id)
+        Buffers: shared hit=4
+        ->  Seq Scan on "Assessment" a  (cost=0.00..3.00 rows=100 width=65) (actual time=0.001..0.004 rows=100 loops=1)
+              Buffers: shared hit=2
+        ->  Hash  (cost=3.00..3.00 rows=100 width=20) (actual time=0.012..0.012 rows=100 loops=1)
+              Buckets: 1024  Batches: 1  Memory Usage: 14kB
+              Buffers: shared hit=2
+              ->  Seq Scan on "Skill" s  (cost=0.00..3.00 rows=100 width=20) (actual time=0.001..0.005 rows=100 loops=1)
+                    Buffers: shared hit=2
+Planning:
+  Buffers: shared hit=188
+Planning Time: 0.337 ms
+Execution Time: 0.071 ms
+
+==================== RUN 3: 0.143 ms ====================
+Sort  (cost=10.85..11.10 rows=100 width=75) (actual time=0.099..0.108 rows=100 loops=1)
+  Sort Key: s.name, a.title
+  Sort Method: quicksort  Memory: 35kB
+  Buffers: shared hit=7
+  ->  Hash Join  (cost=4.25..7.52 rows=100 width=75) (actual time=0.024..0.044 rows=100 loops=1)
+        Hash Cond: (a."skillId" = s.id)
+        Buffers: shared hit=4
+        ->  Seq Scan on "Assessment" a  (cost=0.00..3.00 rows=100 width=65) (actual time=0.003..0.007 rows=100 loops=1)
+              Buffers: shared hit=2
+        ->  Hash  (cost=3.00..3.00 rows=100 width=20) (actual time=0.016..0.016 rows=100 loops=1)
+              Buckets: 1024  Batches: 1  Memory Usage: 14kB
+              Buffers: shared hit=2
+              ->  Seq Scan on "Skill" s  (cost=0.00..3.00 rows=100 width=20) (actual time=0.002..0.007 rows=100 loops=1)
+                    Buffers: shared hit=2
+Planning:
+  Buffers: shared hit=188
+Planning Time: 1.075 ms
+Execution Time: 0.143 ms

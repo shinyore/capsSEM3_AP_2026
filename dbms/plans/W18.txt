@@ -1,0 +1,67 @@
+Query: W18 (WRITE)
+Database: skillbridge_ap_cp4
+PostgreSQL: PostgreSQL 16.15 (Homebrew) on aarch64-apple-darwin27.0.0, compiled by Apple clang version 21.0.0 (clang-2100.3.34.2), 64-bit
+Runs: 3
+Parameters: ('bench-recommendation', 'student-profile-00001', 'skill-003', 'Benchmark recommendation', 'Synthetic recommendation', 'BEGINNER', 'https://example.test', 2)
+
+SQL:
+INSERT INTO "LearningRecommendation" ("id","studentProfileId","skillId","title","description","difficulty","resourceUrl","priority","isCompleted")
+SELECT 'bench-recommendation','student-profile-00001','skill-003','Benchmark recommendation','Synthetic recommendation','BEGINNER','https://example.test',2,FALSE WHERE NOT EXISTS
+(SELECT 1 FROM "LearningRecommendation" WHERE "studentProfileId"='student-profile-00001' AND "skillId"='skill-003' AND "title"='Benchmark recommendation' AND "isCompleted"=FALSE);
+
+==================== RUN 1: 0.393 ms ====================
+Insert on "LearningRecommendation"  (cost=8.31..8.33 rows=0 width=0) (actual time=0.090..0.091 rows=0 loops=1)
+  Buffers: shared hit=12
+  InitPlan 1 (returns $0)
+    ->  Index Scan using "LearningRecommendation_studentProfileId_isCompleted_priority_id" on "LearningRecommendation" "LearningRecommendation_1"  (cost=0.29..8.31 rows=1 width=0) (actual time=0.006..0.007 rows=0 loops=1)
+          Index Cond: (("studentProfileId" = 'student-profile-00001'::text) AND ("isCompleted" = false))
+          Filter: (("skillId" = 'skill-003'::text) AND (title = 'Benchmark recommendation'::text))
+          Rows Removed by Filter: 2
+          Buffers: shared hit=3
+  ->  Result  (cost=0.00..0.02 rows=1 width=209) (actual time=0.013..0.013 rows=1 loops=1)
+        One-Time Filter: (NOT $0)
+        Buffers: shared hit=3
+Planning:
+  Buffers: shared hit=116
+Planning Time: 0.212 ms
+Trigger for constraint LearningRecommendation_studentProfileId_fkey: time=0.178 calls=1
+Trigger for constraint LearningRecommendation_skillId_fkey: time=0.103 calls=1
+Execution Time: 0.393 ms
+
+==================== RUN 2: 0.348 ms ====================
+Insert on "LearningRecommendation"  (cost=8.31..8.33 rows=0 width=0) (actual time=0.051..0.052 rows=0 loops=1)
+  Buffers: shared hit=15
+  InitPlan 1 (returns $0)
+    ->  Index Scan using "LearningRecommendation_studentProfileId_isCompleted_priority_id" on "LearningRecommendation" "LearningRecommendation_1"  (cost=0.29..8.31 rows=1 width=0) (actual time=0.010..0.010 rows=0 loops=1)
+          Index Cond: (("studentProfileId" = 'student-profile-00001'::text) AND ("isCompleted" = false))
+          Filter: (("skillId" = 'skill-003'::text) AND (title = 'Benchmark recommendation'::text))
+          Rows Removed by Filter: 2
+          Buffers: shared hit=6
+  ->  Result  (cost=0.00..0.02 rows=1 width=209) (actual time=0.016..0.016 rows=1 loops=1)
+        One-Time Filter: (NOT $0)
+        Buffers: shared hit=6
+Planning:
+  Buffers: shared hit=116
+Planning Time: 0.189 ms
+Trigger for constraint LearningRecommendation_studentProfileId_fkey: time=0.174 calls=1
+Trigger for constraint LearningRecommendation_skillId_fkey: time=0.104 calls=1
+Execution Time: 0.348 ms
+
+==================== RUN 3: 0.331 ms ====================
+Insert on "LearningRecommendation"  (cost=8.31..8.33 rows=0 width=0) (actual time=0.049..0.050 rows=0 loops=1)
+  Buffers: shared hit=15
+  InitPlan 1 (returns $0)
+    ->  Index Scan using "LearningRecommendation_studentProfileId_isCompleted_priority_id" on "LearningRecommendation" "LearningRecommendation_1"  (cost=0.29..8.31 rows=1 width=0) (actual time=0.010..0.010 rows=0 loops=1)
+          Index Cond: (("studentProfileId" = 'student-profile-00001'::text) AND ("isCompleted" = false))
+          Filter: (("skillId" = 'skill-003'::text) AND (title = 'Benchmark recommendation'::text))
+          Rows Removed by Filter: 2
+          Buffers: shared hit=6
+  ->  Result  (cost=0.00..0.02 rows=1 width=209) (actual time=0.016..0.016 rows=1 loops=1)
+        One-Time Filter: (NOT $0)
+        Buffers: shared hit=6
+Planning:
+  Buffers: shared hit=116
+Planning Time: 0.176 ms
+Trigger for constraint LearningRecommendation_studentProfileId_fkey: time=0.164 calls=1
+Trigger for constraint LearningRecommendation_skillId_fkey: time=0.098 calls=1
+Execution Time: 0.331 ms

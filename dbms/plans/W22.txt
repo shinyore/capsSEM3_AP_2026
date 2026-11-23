@@ -1,0 +1,60 @@
+Query: W22 (WRITE)
+Database: skillbridge_ap_cp4
+PostgreSQL: PostgreSQL 16.15 (Homebrew) on aarch64-apple-darwin27.0.0, compiled by Apple clang version 21.0.0 (clang-2100.3.34.2), 64-bit
+Runs: 3
+Parameters: ('industry-user-001', 'opportunity-0001', 'CLOSED')
+
+SQL:
+UPDATE "Opportunity" o SET "status"='CLOSED',"publishedAt"=CASE WHEN 'CLOSED'='OPEN' THEN COALESCE(o."publishedAt",CURRENT_TIMESTAMP) ELSE o."publishedAt" END,"updatedAt"=CURRENT_TIMESTAMP
+FROM "Company" c WHERE o."companyId"=c."id" AND c."userId"='industry-user-001' AND o."id"='opportunity-0001' AND ('CLOSED'<>'OPEN' OR c."isVerified"=TRUE);
+
+==================== RUN 1: 0.115 ms ====================
+Update on "Opportunity" o  (cost=0.42..16.48 rows=0 width=0) (actual time=0.077..0.078 rows=0 loops=1)
+  Buffers: shared hit=28
+  ->  Nested Loop  (cost=0.42..16.48 rows=1 width=32) (actual time=0.016..0.017 rows=1 loops=1)
+        Join Filter: (o."companyId" = c.id)
+        Buffers: shared hit=7
+        ->  Index Scan using "Opportunity_pkey" on "Opportunity" o  (cost=0.28..8.29 rows=1 width=26) (actual time=0.008..0.010 rows=1 loops=1)
+              Index Cond: (id = 'opportunity-0001'::text)
+              Buffers: shared hit=5
+        ->  Index Scan using "Company_userId_key" on "Company" c  (cost=0.14..8.16 rows=1 width=18) (actual time=0.002..0.002 rows=1 loops=1)
+              Index Cond: ("userId" = 'industry-user-001'::text)
+              Buffers: shared hit=2
+Planning:
+  Buffers: shared hit=357
+Planning Time: 0.486 ms
+Execution Time: 0.115 ms
+
+==================== RUN 2: 0.130 ms ====================
+Update on "Opportunity" o  (cost=0.42..16.48 rows=0 width=0) (actual time=0.085..0.087 rows=0 loops=1)
+  Buffers: shared hit=28
+  ->  Nested Loop  (cost=0.42..16.48 rows=1 width=32) (actual time=0.019..0.020 rows=1 loops=1)
+        Join Filter: (o."companyId" = c.id)
+        Buffers: shared hit=7
+        ->  Index Scan using "Opportunity_pkey" on "Opportunity" o  (cost=0.28..8.29 rows=1 width=26) (actual time=0.009..0.011 rows=1 loops=1)
+              Index Cond: (id = 'opportunity-0001'::text)
+              Buffers: shared hit=5
+        ->  Index Scan using "Company_userId_key" on "Company" c  (cost=0.14..8.16 rows=1 width=18) (actual time=0.002..0.002 rows=1 loops=1)
+              Index Cond: ("userId" = 'industry-user-001'::text)
+              Buffers: shared hit=2
+Planning:
+  Buffers: shared hit=357
+Planning Time: 0.569 ms
+Execution Time: 0.130 ms
+
+==================== RUN 3: 0.112 ms ====================
+Update on "Opportunity" o  (cost=0.42..16.48 rows=0 width=0) (actual time=0.074..0.075 rows=0 loops=1)
+  Buffers: shared hit=28
+  ->  Nested Loop  (cost=0.42..16.48 rows=1 width=32) (actual time=0.016..0.018 rows=1 loops=1)
+        Join Filter: (o."companyId" = c.id)
+        Buffers: shared hit=7
+        ->  Index Scan using "Opportunity_pkey" on "Opportunity" o  (cost=0.28..8.29 rows=1 width=26) (actual time=0.008..0.010 rows=1 loops=1)
+              Index Cond: (id = 'opportunity-0001'::text)
+              Buffers: shared hit=5
+        ->  Index Scan using "Company_userId_key" on "Company" c  (cost=0.14..8.16 rows=1 width=18) (actual time=0.002..0.002 rows=1 loops=1)
+              Index Cond: ("userId" = 'industry-user-001'::text)
+              Buffers: shared hit=2
+Planning:
+  Buffers: shared hit=357
+Planning Time: 0.460 ms
+Execution Time: 0.112 ms

@@ -1,0 +1,122 @@
+Query: R21 (READ)
+Database: skillbridge_ap_cp4
+PostgreSQL: PostgreSQL 16.15 (Homebrew) on aarch64-apple-darwin27.0.0, compiled by Apple clang version 21.0.0 (clang-2100.3.34.2), 64-bit
+Runs: 3
+Parameters: ('industry-user-001',)
+
+SQL:
+SELECT a."id",a."status",a."coverLetter",a."recruiterRemarks",a."createdAt",u."fullName",u."email",sp."resumeUrl",o."title"
+FROM "Application" a JOIN "Opportunity" o ON o."id"=a."opportunityId"
+JOIN "Company" c ON c."id"=o."companyId" JOIN "StudentProfile" sp ON sp."id"=a."studentProfileId"
+JOIN "User" u ON u."id"=sp."userId" WHERE c."userId"='industry-user-001' ORDER BY a."createdAt" DESC;
+
+==================== RUN 1: 0.467 ms ====================
+Sort  (cost=107.08..107.28 rows=83 width=175) (actual time=0.424..0.427 rows=100 loops=1)
+  Sort Key: a."createdAt" DESC
+  Sort Method: quicksort  Memory: 42kB
+  Buffers: shared hit=726
+  ->  Nested Loop  (cost=5.32..104.43 rows=83 width=175) (actual time=0.021..0.404 rows=100 loops=1)
+        Buffers: shared hit=723
+        ->  Nested Loop  (cost=5.04..69.70 rows=83 width=157) (actual time=0.014..0.267 rows=100 loops=1)
+              Buffers: shared hit=423
+              ->  Nested Loop  (cost=4.76..41.35 rows=83 width=128) (actual time=0.012..0.125 rows=100 loops=1)
+                    Buffers: shared hit=123
+                    ->  Nested Loop  (cost=4.47..29.27 rows=5 width=32) (actual time=0.007..0.015 rows=6 loops=1)
+                          Buffers: shared hit=11
+                          ->  Index Scan using "Company_userId_key" on "Company" c  (cost=0.14..8.16 rows=1 width=12) (actual time=0.002..0.002 rows=1 loops=1)
+                                Index Cond: ("userId" = 'industry-user-001'::text)
+                                Buffers: shared hit=2
+                          ->  Bitmap Heap Scan on "Opportunity" o  (cost=4.32..21.05 rows=6 width=44) (actual time=0.004..0.012 rows=6 loops=1)
+                                Recheck Cond: ("companyId" = c.id)
+                                Heap Blocks: exact=7
+                                Buffers: shared hit=9
+                                ->  Bitmap Index Scan on "Opportunity_companyId_status_idx"  (cost=0.00..4.32 rows=6 width=0) (actual time=0.003..0.003 rows=15 loops=1)
+                                      Index Cond: ("companyId" = c.id)
+                                      Buffers: shared hit=2
+                    ->  Index Scan using "Application_opportunityId_status_idx" on "Application" a  (cost=0.29..2.22 rows=20 width=130) (actual time=0.002..0.017 rows=17 loops=6)
+                          Index Cond: ("opportunityId" = o.id)
+                          Buffers: shared hit=112
+              ->  Index Scan using "StudentProfile_pkey" on "StudentProfile" sp  (cost=0.28..0.34 rows=1 width=73) (actual time=0.001..0.001 rows=1 loops=100)
+                    Index Cond: (id = a."studentProfileId")
+                    Buffers: shared hit=300
+        ->  Index Scan using "User_pkey" on "User" u  (cost=0.28..0.42 rows=1 width=55) (actual time=0.001..0.001 rows=1 loops=100)
+              Index Cond: (id = sp."userId")
+              Buffers: shared hit=300
+Planning:
+  Buffers: shared hit=615
+Planning Time: 0.984 ms
+Execution Time: 0.467 ms
+
+==================== RUN 2: 0.439 ms ====================
+Sort  (cost=107.08..107.28 rows=83 width=175) (actual time=0.402..0.404 rows=100 loops=1)
+  Sort Key: a."createdAt" DESC
+  Sort Method: quicksort  Memory: 42kB
+  Buffers: shared hit=726
+  ->  Nested Loop  (cost=5.32..104.43 rows=83 width=175) (actual time=0.018..0.383 rows=100 loops=1)
+        Buffers: shared hit=723
+        ->  Nested Loop  (cost=5.04..69.70 rows=83 width=157) (actual time=0.012..0.250 rows=100 loops=1)
+              Buffers: shared hit=423
+              ->  Nested Loop  (cost=4.76..41.35 rows=83 width=128) (actual time=0.010..0.116 rows=100 loops=1)
+                    Buffers: shared hit=123
+                    ->  Nested Loop  (cost=4.47..29.27 rows=5 width=32) (actual time=0.006..0.011 rows=6 loops=1)
+                          Buffers: shared hit=11
+                          ->  Index Scan using "Company_userId_key" on "Company" c  (cost=0.14..8.16 rows=1 width=12) (actual time=0.001..0.001 rows=1 loops=1)
+                                Index Cond: ("userId" = 'industry-user-001'::text)
+                                Buffers: shared hit=2
+                          ->  Bitmap Heap Scan on "Opportunity" o  (cost=4.32..21.05 rows=6 width=44) (actual time=0.004..0.008 rows=6 loops=1)
+                                Recheck Cond: ("companyId" = c.id)
+                                Heap Blocks: exact=7
+                                Buffers: shared hit=9
+                                ->  Bitmap Index Scan on "Opportunity_companyId_status_idx"  (cost=0.00..4.32 rows=6 width=0) (actual time=0.002..0.002 rows=15 loops=1)
+                                      Index Cond: ("companyId" = c.id)
+                                      Buffers: shared hit=2
+                    ->  Index Scan using "Application_opportunityId_status_idx" on "Application" a  (cost=0.29..2.22 rows=20 width=130) (actual time=0.002..0.016 rows=17 loops=6)
+                          Index Cond: ("opportunityId" = o.id)
+                          Buffers: shared hit=112
+              ->  Index Scan using "StudentProfile_pkey" on "StudentProfile" sp  (cost=0.28..0.34 rows=1 width=73) (actual time=0.001..0.001 rows=1 loops=100)
+                    Index Cond: (id = a."studentProfileId")
+                    Buffers: shared hit=300
+        ->  Index Scan using "User_pkey" on "User" u  (cost=0.28..0.42 rows=1 width=55) (actual time=0.001..0.001 rows=1 loops=100)
+              Index Cond: (id = sp."userId")
+              Buffers: shared hit=300
+Planning:
+  Buffers: shared hit=614
+Planning Time: 0.958 ms
+Execution Time: 0.439 ms
+
+==================== RUN 3: 0.460 ms ====================
+Sort  (cost=107.08..107.28 rows=83 width=175) (actual time=0.420..0.423 rows=100 loops=1)
+  Sort Key: a."createdAt" DESC
+  Sort Method: quicksort  Memory: 42kB
+  Buffers: shared hit=726
+  ->  Nested Loop  (cost=5.32..104.43 rows=83 width=175) (actual time=0.020..0.395 rows=100 loops=1)
+        Buffers: shared hit=723
+        ->  Nested Loop  (cost=5.04..69.70 rows=83 width=157) (actual time=0.014..0.261 rows=100 loops=1)
+              Buffers: shared hit=423
+              ->  Nested Loop  (cost=4.76..41.35 rows=83 width=128) (actual time=0.012..0.122 rows=100 loops=1)
+                    Buffers: shared hit=123
+                    ->  Nested Loop  (cost=4.47..29.27 rows=5 width=32) (actual time=0.008..0.013 rows=6 loops=1)
+                          Buffers: shared hit=11
+                          ->  Index Scan using "Company_userId_key" on "Company" c  (cost=0.14..8.16 rows=1 width=12) (actual time=0.002..0.002 rows=1 loops=1)
+                                Index Cond: ("userId" = 'industry-user-001'::text)
+                                Buffers: shared hit=2
+                          ->  Bitmap Heap Scan on "Opportunity" o  (cost=4.32..21.05 rows=6 width=44) (actual time=0.005..0.010 rows=6 loops=1)
+                                Recheck Cond: ("companyId" = c.id)
+                                Heap Blocks: exact=7
+                                Buffers: shared hit=9
+                                ->  Bitmap Index Scan on "Opportunity_companyId_status_idx"  (cost=0.00..4.32 rows=6 width=0) (actual time=0.003..0.003 rows=15 loops=1)
+                                      Index Cond: ("companyId" = c.id)
+                                      Buffers: shared hit=2
+                    ->  Index Scan using "Application_opportunityId_status_idx" on "Application" a  (cost=0.29..2.22 rows=20 width=130) (actual time=0.002..0.017 rows=17 loops=6)
+                          Index Cond: ("opportunityId" = o.id)
+                          Buffers: shared hit=112
+              ->  Index Scan using "StudentProfile_pkey" on "StudentProfile" sp  (cost=0.28..0.34 rows=1 width=73) (actual time=0.001..0.001 rows=1 loops=100)
+                    Index Cond: (id = a."studentProfileId")
+                    Buffers: shared hit=300
+        ->  Index Scan using "User_pkey" on "User" u  (cost=0.28..0.42 rows=1 width=55) (actual time=0.001..0.001 rows=1 loops=100)
+              Index Cond: (id = sp."userId")
+              Buffers: shared hit=300
+Planning:
+  Buffers: shared hit=614
+Planning Time: 1.073 ms
+Execution Time: 0.460 ms

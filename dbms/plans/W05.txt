@@ -1,0 +1,42 @@
+Query: W5 (WRITE)
+Database: skillbridge_ap_cp4
+PostgreSQL: PostgreSQL 16.15 (Homebrew) on aarch64-apple-darwin27.0.0, compiled by Apple clang version 21.0.0 (clang-2100.3.34.2), 64-bit
+Runs: 3
+Parameters: ('student-user-00001', 'Updated Student', '+15550000101', 'STUDENT')
+
+SQL:
+UPDATE "User" SET "fullName" = COALESCE('Updated Student', "fullName"), "phone" = COALESCE('+15550000101', "phone"),
+ "role" = COALESCE('STUDENT', "role"), "updatedAt" = CURRENT_TIMESTAMP WHERE "id" = 'student-user-00001';
+
+==================== RUN 1: 0.143 ms ====================
+Update on "User"  (cost=0.28..8.31 rows=0 width=0) (actual time=0.098..0.099 rows=0 loops=1)
+  Buffers: shared hit=28 dirtied=3
+  ->  Index Scan using "User_pkey" on "User"  (cost=0.28..8.31 rows=1 width=82) (actual time=0.014..0.014 rows=1 loops=1)
+        Index Cond: (id = 'student-user-00001'::text)
+        Buffers: shared hit=3
+Planning:
+  Buffers: shared hit=106
+Planning Time: 0.164 ms
+Execution Time: 0.143 ms
+
+==================== RUN 2: 0.111 ms ====================
+Update on "User"  (cost=0.28..8.31 rows=0 width=0) (actual time=0.076..0.077 rows=0 loops=1)
+  Buffers: shared hit=31
+  ->  Index Scan using "User_pkey" on "User"  (cost=0.28..8.31 rows=1 width=82) (actual time=0.019..0.019 rows=1 loops=1)
+        Index Cond: (id = 'student-user-00001'::text)
+        Buffers: shared hit=5
+Planning:
+  Buffers: shared hit=106
+Planning Time: 0.175 ms
+Execution Time: 0.111 ms
+
+==================== RUN 3: 0.106 ms ====================
+Update on "User"  (cost=0.28..8.31 rows=0 width=0) (actual time=0.071..0.072 rows=0 loops=1)
+  Buffers: shared hit=31
+  ->  Index Scan using "User_pkey" on "User"  (cost=0.28..8.31 rows=1 width=82) (actual time=0.014..0.014 rows=1 loops=1)
+        Index Cond: (id = 'student-user-00001'::text)
+        Buffers: shared hit=5
+Planning:
+  Buffers: shared hit=106
+Planning Time: 0.158 ms
+Execution Time: 0.106 ms

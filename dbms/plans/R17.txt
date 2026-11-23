@@ -1,0 +1,78 @@
+Query: R17 (READ)
+Database: skillbridge_ap_cp4
+PostgreSQL: PostgreSQL 16.15 (Homebrew) on aarch64-apple-darwin27.0.0, compiled by Apple clang version 21.0.0 (clang-2100.3.34.2), 64-bit
+Runs: 3
+Parameters: ('INTERNSHIP', 'Remote', 25, 0)
+
+SQL:
+SELECT o.*,c."name" AS "companyName",c."isVerified"
+FROM "Opportunity" o JOIN "Company" c ON c."id"=o."companyId"
+WHERE o."status"='OPEN' AND ('INTERNSHIP'::"OpportunityType" IS NULL OR o."type"='INTERNSHIP')
+AND ('Remote'::TEXT IS NULL OR o."location" ILIKE '%'||'Remote'||'%')
+ORDER BY o."createdAt" DESC LIMIT 25 OFFSET 0;
+
+==================== RUN 1: 0.127 ms ====================
+Limit  (cost=0.43..46.48 rows=25 width=228) (actual time=0.013..0.078 rows=25 loops=1)
+  Buffers: shared hit=259
+  ->  Nested Loop  (cost=0.43..245.42 rows=133 width=228) (actual time=0.012..0.076 rows=25 loops=1)
+        Buffers: shared hit=259
+        ->  Index Scan Backward using "Opportunity_createdAt_idx" on "Opportunity" o  (cost=0.28..201.10 rows=133 width=216) (actual time=0.008..0.053 rows=25 loops=1)
+              Filter: ((location ~~* '%Remote%'::text) AND (status = 'OPEN'::"OpportunityStatus") AND (type = 'INTERNSHIP'::"OpportunityType"))
+              Rows Removed by Filter: 181
+              Buffers: shared hit=209
+        ->  Memoize  (cost=0.15..0.41 rows=1 width=24) (actual time=0.001..0.001 rows=1 loops=25)
+              Cache Key: o."companyId"
+              Cache Mode: logical
+              Hits: 0  Misses: 25  Evictions: 0  Overflows: 0  Memory Usage: 4kB
+              Buffers: shared hit=50
+              ->  Index Scan using "Company_pkey" on "Company" c  (cost=0.14..0.40 rows=1 width=24) (actual time=0.000..0.000 rows=1 loops=25)
+                    Index Cond: (id = o."companyId")
+                    Buffers: shared hit=50
+Planning:
+  Buffers: shared hit=411 dirtied=3
+Planning Time: 0.582 ms
+Execution Time: 0.127 ms
+
+==================== RUN 2: 0.098 ms ====================
+Limit  (cost=0.43..46.48 rows=25 width=228) (actual time=0.012..0.078 rows=25 loops=1)
+  Buffers: shared hit=259
+  ->  Nested Loop  (cost=0.43..245.42 rows=133 width=228) (actual time=0.012..0.076 rows=25 loops=1)
+        Buffers: shared hit=259
+        ->  Index Scan Backward using "Opportunity_createdAt_idx" on "Opportunity" o  (cost=0.28..201.10 rows=133 width=216) (actual time=0.007..0.053 rows=25 loops=1)
+              Filter: ((location ~~* '%Remote%'::text) AND (status = 'OPEN'::"OpportunityStatus") AND (type = 'INTERNSHIP'::"OpportunityType"))
+              Rows Removed by Filter: 181
+              Buffers: shared hit=209
+        ->  Memoize  (cost=0.15..0.41 rows=1 width=24) (actual time=0.001..0.001 rows=1 loops=25)
+              Cache Key: o."companyId"
+              Cache Mode: logical
+              Hits: 0  Misses: 25  Evictions: 0  Overflows: 0  Memory Usage: 4kB
+              Buffers: shared hit=50
+              ->  Index Scan using "Company_pkey" on "Company" c  (cost=0.14..0.40 rows=1 width=24) (actual time=0.000..0.000 rows=1 loops=25)
+                    Index Cond: (id = o."companyId")
+                    Buffers: shared hit=50
+Planning:
+  Buffers: shared hit=410
+Planning Time: 0.527 ms
+Execution Time: 0.098 ms
+
+==================== RUN 3: 0.111 ms ====================
+Limit  (cost=0.43..46.48 rows=25 width=228) (actual time=0.015..0.086 rows=25 loops=1)
+  Buffers: shared hit=259
+  ->  Nested Loop  (cost=0.43..245.42 rows=133 width=228) (actual time=0.015..0.084 rows=25 loops=1)
+        Buffers: shared hit=259
+        ->  Index Scan Backward using "Opportunity_createdAt_idx" on "Opportunity" o  (cost=0.28..201.10 rows=133 width=216) (actual time=0.009..0.057 rows=25 loops=1)
+              Filter: ((location ~~* '%Remote%'::text) AND (status = 'OPEN'::"OpportunityStatus") AND (type = 'INTERNSHIP'::"OpportunityType"))
+              Rows Removed by Filter: 181
+              Buffers: shared hit=209
+        ->  Memoize  (cost=0.15..0.41 rows=1 width=24) (actual time=0.001..0.001 rows=1 loops=25)
+              Cache Key: o."companyId"
+              Cache Mode: logical
+              Hits: 0  Misses: 25  Evictions: 0  Overflows: 0  Memory Usage: 4kB
+              Buffers: shared hit=50
+              ->  Index Scan using "Company_pkey" on "Company" c  (cost=0.14..0.40 rows=1 width=24) (actual time=0.001..0.001 rows=1 loops=25)
+                    Index Cond: (id = o."companyId")
+                    Buffers: shared hit=50
+Planning:
+  Buffers: shared hit=410
+Planning Time: 0.589 ms
+Execution Time: 0.111 ms

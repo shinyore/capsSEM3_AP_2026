@@ -1,0 +1,60 @@
+Query: W19 (WRITE)
+Database: skillbridge_ap_cp4
+PostgreSQL: PostgreSQL 16.15 (Homebrew) on aarch64-apple-darwin27.0.0, compiled by Apple clang version 21.0.0 (clang-2100.3.34.2), 64-bit
+Runs: 3
+Parameters: ('student-user-00001', 'recommendation-000001', True)
+
+SQL:
+UPDATE "LearningRecommendation" lr SET "isCompleted"=TRUE FROM "StudentProfile" sp
+WHERE lr."studentProfileId"=sp."id" AND sp."userId"='student-user-00001' AND lr."id"='recommendation-000001';
+
+==================== RUN 1: 0.099 ms ====================
+Update on "LearningRecommendation" lr  (cost=0.57..16.61 rows=0 width=0) (actual time=0.060..0.061 rows=0 loops=1)
+  Buffers: shared hit=24
+  ->  Nested Loop  (cost=0.57..16.61 rows=1 width=13) (actual time=0.008..0.008 rows=1 loops=1)
+        Join Filter: (lr."studentProfileId" = sp.id)
+        Buffers: shared hit=6
+        ->  Index Scan using "LearningRecommendation_pkey" on "LearningRecommendation" lr  (cost=0.29..8.30 rows=1 width=28) (actual time=0.004..0.004 rows=1 loops=1)
+              Index Cond: (id = 'recommendation-000001'::text)
+              Buffers: shared hit=3
+        ->  Index Scan using "StudentProfile_userId_key" on "StudentProfile" sp  (cost=0.28..8.30 rows=1 width=28) (actual time=0.003..0.003 rows=1 loops=1)
+              Index Cond: ("userId" = 'student-user-00001'::text)
+              Buffers: shared hit=3
+Planning:
+  Buffers: shared hit=317
+Planning Time: 0.407 ms
+Execution Time: 0.099 ms
+
+==================== RUN 2: 0.135 ms ====================
+Update on "LearningRecommendation" lr  (cost=0.57..16.61 rows=0 width=0) (actual time=0.070..0.072 rows=0 loops=1)
+  Buffers: shared hit=26
+  ->  Nested Loop  (cost=0.57..16.61 rows=1 width=13) (actual time=0.009..0.011 rows=1 loops=1)
+        Join Filter: (lr."studentProfileId" = sp.id)
+        Buffers: shared hit=8
+        ->  Index Scan using "LearningRecommendation_pkey" on "LearningRecommendation" lr  (cost=0.29..8.30 rows=1 width=28) (actual time=0.005..0.007 rows=1 loops=1)
+              Index Cond: (id = 'recommendation-000001'::text)
+              Buffers: shared hit=5
+        ->  Index Scan using "StudentProfile_userId_key" on "StudentProfile" sp  (cost=0.28..8.30 rows=1 width=28) (actual time=0.004..0.004 rows=1 loops=1)
+              Index Cond: ("userId" = 'student-user-00001'::text)
+              Buffers: shared hit=3
+Planning:
+  Buffers: shared hit=318
+Planning Time: 0.695 ms
+Execution Time: 0.135 ms
+
+==================== RUN 3: 0.098 ms ====================
+Update on "LearningRecommendation" lr  (cost=0.57..16.61 rows=0 width=0) (actual time=0.058..0.059 rows=0 loops=1)
+  Buffers: shared hit=26
+  ->  Nested Loop  (cost=0.57..16.61 rows=1 width=13) (actual time=0.007..0.009 rows=1 loops=1)
+        Join Filter: (lr."studentProfileId" = sp.id)
+        Buffers: shared hit=8
+        ->  Index Scan using "LearningRecommendation_pkey" on "LearningRecommendation" lr  (cost=0.29..8.30 rows=1 width=28) (actual time=0.004..0.005 rows=1 loops=1)
+              Index Cond: (id = 'recommendation-000001'::text)
+              Buffers: shared hit=5
+        ->  Index Scan using "StudentProfile_userId_key" on "StudentProfile" sp  (cost=0.28..8.30 rows=1 width=28) (actual time=0.003..0.003 rows=1 loops=1)
+              Index Cond: ("userId" = 'student-user-00001'::text)
+              Buffers: shared hit=3
+Planning:
+  Buffers: shared hit=318
+Planning Time: 0.425 ms
+Execution Time: 0.098 ms

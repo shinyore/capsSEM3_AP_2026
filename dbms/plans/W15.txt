@@ -1,0 +1,56 @@
+Query: W15 (WRITE)
+Database: skillbridge_ap_cp4
+PostgreSQL: PostgreSQL 16.15 (Homebrew) on aarch64-apple-darwin27.0.0, compiled by Apple clang version 21.0.0 (clang-2100.3.34.2), 64-bit
+Runs: 3
+Parameters: ('student-user-00001', 'skill-001')
+
+SQL:
+DELETE FROM "StudentSkill" ss USING "StudentProfile" sp WHERE ss."studentProfileId"=sp."id" AND sp."userId"='student-user-00001' AND ss."skillId"='skill-001';
+
+==================== RUN 1: 0.055 ms ====================
+Delete on "StudentSkill" ss  (cost=0.70..16.77 rows=0 width=0) (actual time=0.015..0.016 rows=0 loops=1)
+  Buffers: shared hit=8
+  ->  Nested Loop  (cost=0.70..16.77 rows=1 width=12) (actual time=0.007..0.007 rows=1 loops=1)
+        Buffers: shared hit=7
+        ->  Index Scan using "StudentProfile_userId_key" on "StudentProfile" sp  (cost=0.28..8.30 rows=1 width=28) (actual time=0.004..0.004 rows=1 loops=1)
+              Index Cond: ("userId" = 'student-user-00001'::text)
+              Buffers: shared hit=3
+        ->  Index Scan using "StudentSkill_studentProfileId_skillId_key" on "StudentSkill" ss  (cost=0.41..8.43 rows=1 width=28) (actual time=0.002..0.002 rows=1 loops=1)
+              Index Cond: (("studentProfileId" = sp.id) AND ("skillId" = 'skill-001'::text))
+              Buffers: shared hit=4
+Planning:
+  Buffers: shared hit=331
+Planning Time: 0.466 ms
+Execution Time: 0.055 ms
+
+==================== RUN 2: 0.056 ms ====================
+Delete on "StudentSkill" ss  (cost=0.70..16.77 rows=0 width=0) (actual time=0.015..0.016 rows=0 loops=1)
+  Buffers: shared hit=8
+  ->  Nested Loop  (cost=0.70..16.77 rows=1 width=12) (actual time=0.007..0.008 rows=1 loops=1)
+        Buffers: shared hit=7
+        ->  Index Scan using "StudentProfile_userId_key" on "StudentProfile" sp  (cost=0.28..8.30 rows=1 width=28) (actual time=0.004..0.004 rows=1 loops=1)
+              Index Cond: ("userId" = 'student-user-00001'::text)
+              Buffers: shared hit=3
+        ->  Index Scan using "StudentSkill_studentProfileId_skillId_key" on "StudentSkill" ss  (cost=0.41..8.43 rows=1 width=28) (actual time=0.002..0.002 rows=1 loops=1)
+              Index Cond: (("studentProfileId" = sp.id) AND ("skillId" = 'skill-001'::text))
+              Buffers: shared hit=4
+Planning:
+  Buffers: shared hit=331
+Planning Time: 0.469 ms
+Execution Time: 0.056 ms
+
+==================== RUN 3: 0.046 ms ====================
+Delete on "StudentSkill" ss  (cost=0.70..16.77 rows=0 width=0) (actual time=0.012..0.013 rows=0 loops=1)
+  Buffers: shared hit=8
+  ->  Nested Loop  (cost=0.70..16.77 rows=1 width=12) (actual time=0.006..0.006 rows=1 loops=1)
+        Buffers: shared hit=7
+        ->  Index Scan using "StudentProfile_userId_key" on "StudentProfile" sp  (cost=0.28..8.30 rows=1 width=28) (actual time=0.003..0.003 rows=1 loops=1)
+              Index Cond: ("userId" = 'student-user-00001'::text)
+              Buffers: shared hit=3
+        ->  Index Scan using "StudentSkill_studentProfileId_skillId_key" on "StudentSkill" ss  (cost=0.41..8.43 rows=1 width=28) (actual time=0.002..0.002 rows=1 loops=1)
+              Index Cond: (("studentProfileId" = sp.id) AND ("skillId" = 'skill-001'::text))
+              Buffers: shared hit=4
+Planning:
+  Buffers: shared hit=331
+Planning Time: 0.412 ms
+Execution Time: 0.046 ms

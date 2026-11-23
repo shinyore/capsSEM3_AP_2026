@@ -1,0 +1,48 @@
+Query: W9 (WRITE)
+Database: skillbridge_ap_cp4
+PostgreSQL: PostgreSQL 16.15 (Homebrew) on aarch64-apple-darwin27.0.0, compiled by Apple clang version 21.0.0 (clang-2100.3.34.2), 64-bit
+Runs: 3
+Parameters: ('institution-001', 'institution-user-001', 'Updated Institute', 'updated-inst@example.test', 'https://example.test', 'Campus', 'Updated', '+15550000300')
+
+SQL:
+INSERT INTO "Institution" ("id","userId","name","officialEmail","website","address","description","contactInfo","updatedAt") VALUES ('institution-001','institution-user-001','Updated Institute','updated-inst@example.test','https://example.test','Campus','Updated','+15550000300',CURRENT_TIMESTAMP)
+ON CONFLICT ("userId") DO UPDATE SET "name"=EXCLUDED."name", "officialEmail"=EXCLUDED."officialEmail", "website"=EXCLUDED."website", "address"=EXCLUDED."address", "description"=EXCLUDED."description", "contactInfo"=EXCLUDED."contactInfo", "updatedAt"=CURRENT_TIMESTAMP;
+
+==================== RUN 1: 0.106 ms ====================
+Insert on "Institution"  (cost=0.00..0.03 rows=0 width=0) (actual time=0.060..0.061 rows=0 loops=1)
+  Conflict Resolution: UPDATE
+  Conflict Arbiter Indexes: Institution_userId_key
+  Tuples Inserted: 0
+  Conflicting Tuples: 1
+  Buffers: shared hit=32
+  ->  Result  (cost=0.00..0.03 rows=1 width=273) (actual time=0.006..0.006 rows=1 loops=1)
+Planning:
+  Buffers: shared hit=73
+Planning Time: 0.060 ms
+Execution Time: 0.106 ms
+
+==================== RUN 2: 0.092 ms ====================
+Insert on "Institution"  (cost=0.00..0.03 rows=0 width=0) (actual time=0.051..0.052 rows=0 loops=1)
+  Conflict Resolution: UPDATE
+  Conflict Arbiter Indexes: Institution_userId_key
+  Tuples Inserted: 0
+  Conflicting Tuples: 1
+  Buffers: shared hit=35
+  ->  Result  (cost=0.00..0.03 rows=1 width=273) (actual time=0.005..0.005 rows=1 loops=1)
+Planning:
+  Buffers: shared hit=73
+Planning Time: 0.051 ms
+Execution Time: 0.092 ms
+
+==================== RUN 3: 0.102 ms ====================
+Insert on "Institution"  (cost=0.00..0.03 rows=0 width=0) (actual time=0.061..0.062 rows=0 loops=1)
+  Conflict Resolution: UPDATE
+  Conflict Arbiter Indexes: Institution_userId_key
+  Tuples Inserted: 0
+  Conflicting Tuples: 1
+  Buffers: shared hit=35
+  ->  Result  (cost=0.00..0.03 rows=1 width=273) (actual time=0.005..0.005 rows=1 loops=1)
+Planning:
+  Buffers: shared hit=73
+Planning Time: 0.057 ms
+Execution Time: 0.102 ms

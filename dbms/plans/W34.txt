@@ -1,0 +1,41 @@
+Query: W34 (WRITE)
+Database: skillbridge_ap_cp4
+PostgreSQL: PostgreSQL 16.15 (Homebrew) on aarch64-apple-darwin27.0.0, compiled by Apple clang version 21.0.0 (clang-2100.3.34.2), 64-bit
+Runs: 3
+Parameters: ('internship-00001', 'ACTIVE')
+
+SQL:
+UPDATE "Internship" SET "status"='ACTIVE',"updatedAt"=CURRENT_TIMESTAMP WHERE "id"='internship-00001';
+
+==================== RUN 1: 0.131 ms ====================
+Update on "Internship"  (cost=0.28..8.30 rows=0 width=0) (actual time=0.081..0.082 rows=0 loops=1)
+  Buffers: shared hit=26
+  ->  Index Scan using "Internship_pkey" on "Internship"  (cost=0.28..8.30 rows=1 width=18) (actual time=0.010..0.010 rows=1 loops=1)
+        Index Cond: (id = 'internship-00001'::text)
+        Buffers: shared hit=3
+Planning:
+  Buffers: shared hit=115
+Planning Time: 0.212 ms
+Execution Time: 0.131 ms
+
+==================== RUN 2: 0.191 ms ====================
+Update on "Internship"  (cost=0.28..8.30 rows=0 width=0) (actual time=0.108..0.109 rows=0 loops=1)
+  Buffers: shared hit=30
+  ->  Index Scan using "Internship_pkey" on "Internship"  (cost=0.28..8.30 rows=1 width=18) (actual time=0.019..0.019 rows=1 loops=1)
+        Index Cond: (id = 'internship-00001'::text)
+        Buffers: shared hit=5
+Planning:
+  Buffers: shared hit=115
+Planning Time: 0.199 ms
+Execution Time: 0.191 ms
+
+==================== RUN 3: 0.122 ms ====================
+Update on "Internship"  (cost=0.28..8.30 rows=0 width=0) (actual time=0.085..0.086 rows=0 loops=1)
+  Buffers: shared hit=30
+  ->  Index Scan using "Internship_pkey" on "Internship"  (cost=0.28..8.30 rows=1 width=18) (actual time=0.011..0.012 rows=1 loops=1)
+        Index Cond: (id = 'internship-00001'::text)
+        Buffers: shared hit=5
+Planning:
+  Buffers: shared hit=115
+Planning Time: 0.187 ms
+Execution Time: 0.122 ms

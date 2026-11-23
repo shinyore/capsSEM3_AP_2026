@@ -1,0 +1,36 @@
+Query: W1 (WRITE)
+Database: skillbridge_ap_cp4
+PostgreSQL: PostgreSQL 16.15 (Homebrew) on aarch64-apple-darwin27.0.0, compiled by Apple clang version 21.0.0 (clang-2100.3.34.2), 64-bit
+Runs: 3
+Parameters: ('bench-created-user', 'Benchmark User', 'bench-created@example.test', 'hash', '+15550000100', 'STUDENT')
+
+SQL:
+INSERT INTO "User" ("id", "fullName", "email", "password", "phone", "role", "isActive", "updatedAt")
+VALUES ('bench-created-user', 'Benchmark User', 'bench-created@example.test', 'hash', '+15550000100', 'STUDENT', TRUE, CURRENT_TIMESTAMP);
+
+==================== RUN 1: 0.158 ms ====================
+Insert on "User"  (cost=0.00..0.03 rows=0 width=0) (actual time=0.142..0.142 rows=0 loops=1)
+  Buffers: shared hit=81 dirtied=4
+  ->  Result  (cost=0.00..0.03 rows=1 width=181) (actual time=0.005..0.006 rows=1 loops=1)
+Planning:
+  Buffers: shared hit=3
+Planning Time: 0.026 ms
+Execution Time: 0.158 ms
+
+==================== RUN 2: 0.124 ms ====================
+Insert on "User"  (cost=0.00..0.03 rows=0 width=0) (actual time=0.111..0.111 rows=0 loops=1)
+  Buffers: shared hit=83 dirtied=1
+  ->  Result  (cost=0.00..0.03 rows=1 width=181) (actual time=0.005..0.005 rows=1 loops=1)
+Planning:
+  Buffers: shared hit=3
+Planning Time: 0.023 ms
+Execution Time: 0.124 ms
+
+==================== RUN 3: 0.095 ms ====================
+Insert on "User"  (cost=0.00..0.03 rows=0 width=0) (actual time=0.083..0.084 rows=0 loops=1)
+  Buffers: shared hit=84 dirtied=1
+  ->  Result  (cost=0.00..0.03 rows=1 width=181) (actual time=0.004..0.004 rows=1 loops=1)
+Planning:
+  Buffers: shared hit=3
+Planning Time: 0.020 ms
+Execution Time: 0.095 ms

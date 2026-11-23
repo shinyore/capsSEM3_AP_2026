@@ -1,0 +1,76 @@
+Query: R15 (READ)
+Database: skillbridge_ap_cp4
+PostgreSQL: PostgreSQL 16.15 (Homebrew) on aarch64-apple-darwin27.0.0, compiled by Apple clang version 21.0.0 (clang-2100.3.34.2), 64-bit
+Runs: 3
+Parameters: ('student-user-00001',)
+
+SQL:
+SELECT s."id",s."name",s."category",ss."proficiencyLevel"
+FROM "Skill" s CROSS JOIN "StudentProfile" sp LEFT JOIN "StudentSkill" ss ON ss."skillId"=s."id" AND ss."studentProfileId"=sp."id"
+WHERE sp."userId"='student-user-00001' ORDER BY s."category",s."name";
+
+==================== RUN 1: 0.156 ms ====================
+Sort  (cost=859.12..859.37 rows=100 width=32) (actual time=0.121..0.124 rows=100 loops=1)
+  Sort Key: s.category, s.name
+  Sort Method: quicksort  Memory: 30kB
+  Buffers: shared hit=318
+  ->  Nested Loop Left Join  (cost=0.70..855.80 rows=100 width=32) (actual time=0.011..0.078 rows=100 loops=1)
+        Buffers: shared hit=315
+        ->  Nested Loop  (cost=0.28..12.30 rows=100 width=50) (actual time=0.006..0.013 rows=100 loops=1)
+              Buffers: shared hit=5
+              ->  Index Scan using "StudentProfile_userId_key" on "StudentProfile" sp  (cost=0.28..8.30 rows=1 width=22) (actual time=0.004..0.004 rows=1 loops=1)
+                    Index Cond: ("userId" = 'student-user-00001'::text)
+                    Buffers: shared hit=3
+              ->  Seq Scan on "Skill" s  (cost=0.00..3.00 rows=100 width=28) (actual time=0.002..0.004 rows=100 loops=1)
+                    Buffers: shared hit=2
+        ->  Index Scan using "StudentSkill_studentProfileId_skillId_key" on "StudentSkill" ss  (cost=0.41..8.43 rows=1 width=36) (actual time=0.001..0.001 rows=0 loops=100)
+              Index Cond: (("studentProfileId" = sp.id) AND ("skillId" = s.id))
+              Buffers: shared hit=310
+Planning:
+  Buffers: shared hit=303
+Planning Time: 0.629 ms
+Execution Time: 0.156 ms
+
+==================== RUN 2: 0.130 ms ====================
+Sort  (cost=859.12..859.37 rows=100 width=32) (actual time=0.104..0.107 rows=100 loops=1)
+  Sort Key: s.category, s.name
+  Sort Method: quicksort  Memory: 30kB
+  Buffers: shared hit=318
+  ->  Nested Loop Left Join  (cost=0.70..855.80 rows=100 width=32) (actual time=0.009..0.070 rows=100 loops=1)
+        Buffers: shared hit=315
+        ->  Nested Loop  (cost=0.28..12.30 rows=100 width=50) (actual time=0.005..0.011 rows=100 loops=1)
+              Buffers: shared hit=5
+              ->  Index Scan using "StudentProfile_userId_key" on "StudentProfile" sp  (cost=0.28..8.30 rows=1 width=22) (actual time=0.003..0.003 rows=1 loops=1)
+                    Index Cond: ("userId" = 'student-user-00001'::text)
+                    Buffers: shared hit=3
+              ->  Seq Scan on "Skill" s  (cost=0.00..3.00 rows=100 width=28) (actual time=0.001..0.003 rows=100 loops=1)
+                    Buffers: shared hit=2
+        ->  Index Scan using "StudentSkill_studentProfileId_skillId_key" on "StudentSkill" ss  (cost=0.41..8.43 rows=1 width=36) (actual time=0.000..0.000 rows=0 loops=100)
+              Index Cond: (("studentProfileId" = sp.id) AND ("skillId" = s.id))
+              Buffers: shared hit=310
+Planning:
+  Buffers: shared hit=303
+Planning Time: 0.517 ms
+Execution Time: 0.130 ms
+
+==================== RUN 3: 0.123 ms ====================
+Sort  (cost=859.12..859.37 rows=100 width=32) (actual time=0.100..0.103 rows=100 loops=1)
+  Sort Key: s.category, s.name
+  Sort Method: quicksort  Memory: 30kB
+  Buffers: shared hit=318
+  ->  Nested Loop Left Join  (cost=0.70..855.80 rows=100 width=32) (actual time=0.007..0.068 rows=100 loops=1)
+        Buffers: shared hit=315
+        ->  Nested Loop  (cost=0.28..12.30 rows=100 width=50) (actual time=0.004..0.011 rows=100 loops=1)
+              Buffers: shared hit=5
+              ->  Index Scan using "StudentProfile_userId_key" on "StudentProfile" sp  (cost=0.28..8.30 rows=1 width=22) (actual time=0.003..0.003 rows=1 loops=1)
+                    Index Cond: ("userId" = 'student-user-00001'::text)
+                    Buffers: shared hit=3
+              ->  Seq Scan on "Skill" s  (cost=0.00..3.00 rows=100 width=28) (actual time=0.001..0.004 rows=100 loops=1)
+                    Buffers: shared hit=2
+        ->  Index Scan using "StudentSkill_studentProfileId_skillId_key" on "StudentSkill" ss  (cost=0.41..8.43 rows=1 width=36) (actual time=0.000..0.000 rows=0 loops=100)
+              Index Cond: (("studentProfileId" = sp.id) AND ("skillId" = s.id))
+              Buffers: shared hit=310
+Planning:
+  Buffers: shared hit=303
+Planning Time: 0.434 ms
+Execution Time: 0.123 ms

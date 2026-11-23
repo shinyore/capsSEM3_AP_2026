@@ -1,0 +1,148 @@
+Query: R27 (READ)
+Database: skillbridge_ap_cp4
+PostgreSQL: PostgreSQL 16.15 (Homebrew) on aarch64-apple-darwin27.0.0, compiled by Apple clang version 21.0.0 (clang-2100.3.34.2), 64-bit
+Runs: 3
+Parameters: (None, None)
+
+SQL:
+SELECT p."id",p."role",p."placedAt",p."compensation",u."fullName" AS "studentName",i."name" AS "institutionName",c."name" AS "companyName"
+FROM "Placement" p JOIN "StudentProfile" sp ON sp."id"=p."studentProfileId"
+JOIN "User" u ON u."id"=sp."userId" JOIN "Company" c ON c."id"=p."companyId"
+LEFT JOIN "Institution" i ON i."id"=p."institutionId"
+WHERE (NULL::TEXT IS NULL OR sp."userId"=NULL) AND (NULL::TEXT IS NULL OR i."userId"=NULL)
+ORDER BY p."placedAt" DESC;
+
+==================== RUN 1: 0.840 ms ====================
+Sort  (cost=306.54..307.79 rows=500 width=74) (actual time=0.786..0.796 rows=500 loops=1)
+  Sort Key: p."placedAt" DESC
+  Sort Method: quicksort  Memory: 75kB
+  Buffers: shared hit=137
+  ->  Hash Left Join  (cost=113.12..284.12 rows=500 width=74) (actual time=0.289..0.737 rows=500 loops=1)
+        Hash Cond: (p."institutionId" = i.id)
+        Buffers: shared hit=134
+        ->  Hash Join  (cost=109.00..278.57 rows=500 width=78) (actual time=0.278..0.694 rows=500 loops=1)
+              Hash Cond: (p."companyId" = c.id)
+              Buffers: shared hit=131
+              ->  Hash Join  (cost=97.60..265.84 rows=500 width=79) (actual time=0.249..0.633 rows=500 loops=1)
+                    Hash Cond: (u.id = sp."userId")
+                    Buffers: shared hit=125
+                    ->  Seq Scan on "User" u  (cost=0.00..143.54 rows=5254 width=31) (actual time=0.004..0.184 rows=5254 loops=1)
+                          Buffers: shared hit=91
+                    ->  Hash  (cost=91.35..91.35 rows=500 width=85) (actual time=0.242..0.243 rows=500 loops=1)
+                          Buckets: 1024  Batches: 1  Memory Usage: 66kB
+                          Buffers: shared hit=34
+                          ->  Merge Join  (cost=38.70..91.35 rows=500 width=85) (actual time=0.091..0.202 rows=500 loops=1)
+                                Merge Cond: (sp.id = p."studentProfileId")
+                                Buffers: shared hit=34
+                                ->  Index Scan using "StudentProfile_pkey" on "StudentProfile" sp  (cost=0.28..439.28 rows=5000 width=41) (actual time=0.001..0.043 rows=501 loops=1)
+                                      Buffers: shared hit=23
+                                ->  Sort  (cost=38.41..39.66 rows=500 width=88) (actual time=0.088..0.097 rows=500 loops=1)
+                                      Sort Key: p."studentProfileId"
+                                      Sort Method: quicksort  Memory: 83kB
+                                      Buffers: shared hit=11
+                                      ->  Seq Scan on "Placement" p  (cost=0.00..16.00 rows=500 width=88) (actual time=0.002..0.036 rows=500 loops=1)
+                                            Buffers: shared hit=11
+              ->  Hash  (cost=8.40..8.40 rows=240 width=23) (actual time=0.025..0.025 rows=200 loops=1)
+                    Buckets: 1024  Batches: 1  Memory Usage: 19kB
+                    Buffers: shared hit=6
+                    ->  Seq Scan on "Company" c  (cost=0.00..8.40 rows=240 width=23) (actual time=0.002..0.014 rows=200 loops=1)
+                          Buffers: shared hit=6
+        ->  Hash  (cost=3.50..3.50 rows=50 width=28) (actual time=0.008..0.008 rows=50 loops=1)
+              Buckets: 1024  Batches: 1  Memory Usage: 11kB
+              Buffers: shared hit=3
+              ->  Seq Scan on "Institution" i  (cost=0.00..3.50 rows=50 width=28) (actual time=0.003..0.005 rows=50 loops=1)
+                    Buffers: shared hit=3
+Planning:
+  Buffers: shared hit=559 dirtied=3
+Planning Time: 0.867 ms
+Execution Time: 0.840 ms
+
+==================== RUN 2: 0.875 ms ====================
+Sort  (cost=306.54..307.79 rows=500 width=74) (actual time=0.824..0.833 rows=500 loops=1)
+  Sort Key: p."placedAt" DESC
+  Sort Method: quicksort  Memory: 75kB
+  Buffers: shared hit=134
+  ->  Hash Left Join  (cost=113.12..284.12 rows=500 width=74) (actual time=0.310..0.771 rows=500 loops=1)
+        Hash Cond: (p."institutionId" = i.id)
+        Buffers: shared hit=131
+        ->  Hash Join  (cost=109.00..278.57 rows=500 width=78) (actual time=0.298..0.728 rows=500 loops=1)
+              Hash Cond: (p."companyId" = c.id)
+              Buffers: shared hit=128
+              ->  Hash Join  (cost=97.60..265.84 rows=500 width=79) (actual time=0.261..0.656 rows=500 loops=1)
+                    Hash Cond: (u.id = sp."userId")
+                    Buffers: shared hit=122
+                    ->  Seq Scan on "User" u  (cost=0.00..143.54 rows=5254 width=31) (actual time=0.004..0.183 rows=5254 loops=1)
+                          Buffers: shared hit=91
+                    ->  Hash  (cost=91.35..91.35 rows=500 width=85) (actual time=0.254..0.255 rows=500 loops=1)
+                          Buckets: 1024  Batches: 1  Memory Usage: 66kB
+                          Buffers: shared hit=31
+                          ->  Merge Join  (cost=38.70..91.35 rows=500 width=85) (actual time=0.099..0.210 rows=500 loops=1)
+                                Merge Cond: (sp.id = p."studentProfileId")
+                                Buffers: shared hit=31
+                                ->  Index Scan using "StudentProfile_pkey" on "StudentProfile" sp  (cost=0.28..439.28 rows=5000 width=41) (actual time=0.001..0.043 rows=501 loops=1)
+                                      Buffers: shared hit=20
+                                ->  Sort  (cost=38.41..39.66 rows=500 width=88) (actual time=0.097..0.105 rows=500 loops=1)
+                                      Sort Key: p."studentProfileId"
+                                      Sort Method: quicksort  Memory: 83kB
+                                      Buffers: shared hit=11
+                                      ->  Seq Scan on "Placement" p  (cost=0.00..16.00 rows=500 width=88) (actual time=0.002..0.036 rows=500 loops=1)
+                                            Buffers: shared hit=11
+              ->  Hash  (cost=8.40..8.40 rows=240 width=23) (actual time=0.034..0.034 rows=200 loops=1)
+                    Buckets: 1024  Batches: 1  Memory Usage: 19kB
+                    Buffers: shared hit=6
+                    ->  Seq Scan on "Company" c  (cost=0.00..8.40 rows=240 width=23) (actual time=0.002..0.021 rows=200 loops=1)
+                          Buffers: shared hit=6
+        ->  Hash  (cost=3.50..3.50 rows=50 width=28) (actual time=0.009..0.009 rows=50 loops=1)
+              Buckets: 1024  Batches: 1  Memory Usage: 11kB
+              Buffers: shared hit=3
+              ->  Seq Scan on "Institution" i  (cost=0.00..3.50 rows=50 width=28) (actual time=0.003..0.005 rows=50 loops=1)
+                    Buffers: shared hit=3
+Planning:
+  Buffers: shared hit=559
+Planning Time: 0.828 ms
+Execution Time: 0.875 ms
+
+==================== RUN 3: 0.845 ms ====================
+Sort  (cost=306.54..307.79 rows=500 width=74) (actual time=0.791..0.803 rows=500 loops=1)
+  Sort Key: p."placedAt" DESC
+  Sort Method: quicksort  Memory: 75kB
+  Buffers: shared hit=134
+  ->  Hash Left Join  (cost=113.12..284.12 rows=500 width=74) (actual time=0.287..0.740 rows=500 loops=1)
+        Hash Cond: (p."institutionId" = i.id)
+        Buffers: shared hit=131
+        ->  Hash Join  (cost=109.00..278.57 rows=500 width=78) (actual time=0.275..0.697 rows=500 loops=1)
+              Hash Cond: (p."companyId" = c.id)
+              Buffers: shared hit=128
+              ->  Hash Join  (cost=97.60..265.84 rows=500 width=79) (actual time=0.247..0.637 rows=500 loops=1)
+                    Hash Cond: (u.id = sp."userId")
+                    Buffers: shared hit=122
+                    ->  Seq Scan on "User" u  (cost=0.00..143.54 rows=5254 width=31) (actual time=0.003..0.179 rows=5254 loops=1)
+                          Buffers: shared hit=91
+                    ->  Hash  (cost=91.35..91.35 rows=500 width=85) (actual time=0.241..0.241 rows=500 loops=1)
+                          Buckets: 1024  Batches: 1  Memory Usage: 66kB
+                          Buffers: shared hit=31
+                          ->  Merge Join  (cost=38.70..91.35 rows=500 width=85) (actual time=0.091..0.200 rows=500 loops=1)
+                                Merge Cond: (sp.id = p."studentProfileId")
+                                Buffers: shared hit=31
+                                ->  Index Scan using "StudentProfile_pkey" on "StudentProfile" sp  (cost=0.28..439.28 rows=5000 width=41) (actual time=0.001..0.042 rows=501 loops=1)
+                                      Buffers: shared hit=20
+                                ->  Sort  (cost=38.41..39.66 rows=500 width=88) (actual time=0.089..0.097 rows=500 loops=1)
+                                      Sort Key: p."studentProfileId"
+                                      Sort Method: quicksort  Memory: 83kB
+                                      Buffers: shared hit=11
+                                      ->  Seq Scan on "Placement" p  (cost=0.00..16.00 rows=500 width=88) (actual time=0.002..0.036 rows=500 loops=1)
+                                            Buffers: shared hit=11
+              ->  Hash  (cost=8.40..8.40 rows=240 width=23) (actual time=0.025..0.025 rows=200 loops=1)
+                    Buckets: 1024  Batches: 1  Memory Usage: 19kB
+                    Buffers: shared hit=6
+                    ->  Seq Scan on "Company" c  (cost=0.00..8.40 rows=240 width=23) (actual time=0.002..0.014 rows=200 loops=1)
+                          Buffers: shared hit=6
+        ->  Hash  (cost=3.50..3.50 rows=50 width=28) (actual time=0.008..0.009 rows=50 loops=1)
+              Buckets: 1024  Batches: 1  Memory Usage: 11kB
+              Buffers: shared hit=3
+              ->  Seq Scan on "Institution" i  (cost=0.00..3.50 rows=50 width=28) (actual time=0.003..0.005 rows=50 loops=1)
+                    Buffers: shared hit=3
+Planning:
+  Buffers: shared hit=559
+Planning Time: 0.865 ms
+Execution Time: 0.845 ms

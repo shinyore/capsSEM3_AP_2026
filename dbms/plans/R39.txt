@@ -1,0 +1,78 @@
+Query: R39 (READ)
+Database: skillbridge_ap_cp4
+PostgreSQL: PostgreSQL 16.15 (Homebrew) on aarch64-apple-darwin27.0.0, compiled by Apple clang version 21.0.0 (clang-2100.3.34.2), 64-bit
+Runs: 3
+Parameters: ()
+
+SQL:
+SELECT c."id",c."name",c."createdAt",c."isVerified",u."email"
+FROM "Company" c JOIN "User" u ON u."id"=c."userId" ORDER BY c."createdAt" DESC LIMIT 5;
+
+==================== RUN 1: 0.120 ms ====================
+Limit  (cost=42.07..42.08 rows=5 width=56) (actual time=0.099..0.100 rows=5 loops=1)
+  Buffers: shared hit=17
+  ->  Sort  (cost=42.07..42.67 rows=240 width=56) (actual time=0.098..0.099 rows=5 loops=1)
+        Sort Key: c."createdAt" DESC
+        Sort Method: top-N heapsort  Memory: 25kB
+        Buffers: shared hit=17
+        ->  Merge Join  (cost=23.54..38.08 rows=240 width=56) (actual time=0.046..0.082 rows=200 loops=1)
+              Merge Cond: (u.id = c."userId")
+              Buffers: shared hit=14
+              ->  Index Scan using "User_pkey" on "User" u  (cost=0.28..529.59 rows=5254 width=42) (actual time=0.001..0.014 rows=205 loops=1)
+                    Buffers: shared hit=8
+              ->  Sort  (cost=17.89..18.49 rows=240 width=50) (actual time=0.042..0.045 rows=200 loops=1)
+                    Sort Key: c."userId"
+                    Sort Method: quicksort  Memory: 40kB
+                    Buffers: shared hit=6
+                    ->  Seq Scan on "Company" c  (cost=0.00..8.40 rows=240 width=50) (actual time=0.002..0.018 rows=200 loops=1)
+                          Buffers: shared hit=6
+Planning:
+  Buffers: shared hit=333
+Planning Time: 0.512 ms
+Execution Time: 0.120 ms
+
+==================== RUN 2: 0.140 ms ====================
+Limit  (cost=42.07..42.08 rows=5 width=56) (actual time=0.117..0.119 rows=5 loops=1)
+  Buffers: shared hit=17
+  ->  Sort  (cost=42.07..42.67 rows=240 width=56) (actual time=0.116..0.117 rows=5 loops=1)
+        Sort Key: c."createdAt" DESC
+        Sort Method: top-N heapsort  Memory: 25kB
+        Buffers: shared hit=17
+        ->  Merge Join  (cost=23.54..38.08 rows=240 width=56) (actual time=0.051..0.097 rows=200 loops=1)
+              Merge Cond: (u.id = c."userId")
+              Buffers: shared hit=14
+              ->  Index Scan using "User_pkey" on "User" u  (cost=0.28..529.59 rows=5254 width=42) (actual time=0.001..0.017 rows=205 loops=1)
+                    Buffers: shared hit=8
+              ->  Sort  (cost=17.89..18.49 rows=240 width=50) (actual time=0.046..0.050 rows=200 loops=1)
+                    Sort Key: c."userId"
+                    Sort Method: quicksort  Memory: 40kB
+                    Buffers: shared hit=6
+                    ->  Seq Scan on "Company" c  (cost=0.00..8.40 rows=240 width=50) (actual time=0.002..0.020 rows=200 loops=1)
+                          Buffers: shared hit=6
+Planning:
+  Buffers: shared hit=333
+Planning Time: 0.477 ms
+Execution Time: 0.140 ms
+
+==================== RUN 3: 0.117 ms ====================
+Limit  (cost=42.07..42.08 rows=5 width=56) (actual time=0.096..0.097 rows=5 loops=1)
+  Buffers: shared hit=17
+  ->  Sort  (cost=42.07..42.67 rows=240 width=56) (actual time=0.095..0.095 rows=5 loops=1)
+        Sort Key: c."createdAt" DESC
+        Sort Method: top-N heapsort  Memory: 25kB
+        Buffers: shared hit=17
+        ->  Merge Join  (cost=23.54..38.08 rows=240 width=56) (actual time=0.044..0.080 rows=200 loops=1)
+              Merge Cond: (u.id = c."userId")
+              Buffers: shared hit=14
+              ->  Index Scan using "User_pkey" on "User" u  (cost=0.28..529.59 rows=5254 width=42) (actual time=0.001..0.014 rows=205 loops=1)
+                    Buffers: shared hit=8
+              ->  Sort  (cost=17.89..18.49 rows=240 width=50) (actual time=0.040..0.043 rows=200 loops=1)
+                    Sort Key: c."userId"
+                    Sort Method: quicksort  Memory: 40kB
+                    Buffers: shared hit=6
+                    ->  Seq Scan on "Company" c  (cost=0.00..8.40 rows=240 width=50) (actual time=0.002..0.018 rows=200 loops=1)
+                          Buffers: shared hit=6
+Planning:
+  Buffers: shared hit=333
+Planning Time: 0.430 ms
+Execution Time: 0.117 ms

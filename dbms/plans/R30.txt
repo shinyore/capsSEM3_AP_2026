@@ -1,0 +1,119 @@
+Query: R30 (READ)
+Database: skillbridge_ap_cp4
+PostgreSQL: PostgreSQL 16.15 (Homebrew) on aarch64-apple-darwin27.0.0, compiled by Apple clang version 21.0.0 (clang-2100.3.34.2), 64-bit
+Runs: 3
+Parameters: ('institution-user-001',)
+
+SQL:
+SELECT sp."id",sp."degree",sp."department",sp."graduationYear",sp."semester",u."fullName",u."email",COUNT(ar."id") AS "assessmentCount"
+FROM "Institution" i JOIN "StudentProfile" sp ON sp."institutionId"=i."id" JOIN "User" u ON u."id"=sp."userId"
+LEFT JOIN "AssessmentResult" ar ON ar."studentProfileId"=sp."id" WHERE i."userId"='institution-user-001'
+GROUP BY sp."id",u."fullName",u."email" ORDER BY u."fullName";
+
+==================== RUN 1: 1.109 ms ====================
+GroupAggregate  (cost=285.15..291.90 rows=300 width=94) (actual time=1.014..1.052 rows=100 loops=1)
+  Group Key: u."fullName", sp.id, u.email
+  Buffers: shared hit=911
+  ->  Sort  (cost=285.15..285.90 rows=300 width=111) (actual time=1.007..1.014 rows=300 loops=1)
+        Sort Key: u."fullName", sp.id, u.email
+        Sort Method: quicksort  Memory: 66kB
+        Buffers: shared hit=911
+        ->  Nested Loop Left Join  (cost=5.62..272.81 rows=300 width=111) (actual time=0.035..0.906 rows=300 loops=1)
+              Buffers: shared hit=908
+              ->  Nested Loop  (cost=5.34..198.14 rows=100 width=86) (actual time=0.029..0.376 rows=100 loops=1)
+                    Buffers: shared hit=406
+                    ->  Nested Loop  (cost=5.06..156.30 rows=100 width=68) (actual time=0.023..0.156 rows=100 loops=1)
+                          Buffers: shared hit=106
+                          ->  Seq Scan on "Institution" i  (cost=0.00..3.62 rows=1 width=16) (actual time=0.007..0.011 rows=1 loops=1)
+                                Filter: ("userId" = 'institution-user-001'::text)
+                                Rows Removed by Filter: 49
+                                Buffers: shared hit=3
+                          ->  Bitmap Heap Scan on "StudentProfile" sp  (cost=5.06..151.68 rows=100 width=84) (actual time=0.014..0.131 rows=100 loops=1)
+                                Recheck Cond: (i.id = "institutionId")
+                                Heap Blocks: exact=101
+                                Buffers: shared hit=103
+                                ->  Bitmap Index Scan on "StudentProfile_institutionId_idx"  (cost=0.00..5.03 rows=100 width=0) (actual time=0.007..0.007 rows=103 loops=1)
+                                      Index Cond: ("institutionId" = i.id)
+                                      Buffers: shared hit=2
+                    ->  Index Scan using "User_pkey" on "User" u  (cost=0.28..0.42 rows=1 width=55) (actual time=0.002..0.002 rows=1 loops=100)
+                          Index Cond: (id = sp."userId")
+                          Buffers: shared hit=300
+              ->  Index Scan using "AssessmentResult_studentProfileId_completedAt_idx" on "AssessmentResult" ar  (cost=0.29..0.72 rows=3 width=47) (actual time=0.003..0.005 rows=3 loops=100)
+                    Index Cond: ("studentProfileId" = sp.id)
+                    Buffers: shared hit=502
+Planning:
+  Buffers: shared hit=398
+Planning Time: 0.861 ms
+Execution Time: 1.109 ms
+
+==================== RUN 2: 0.883 ms ====================
+GroupAggregate  (cost=285.15..291.90 rows=300 width=94) (actual time=0.782..0.817 rows=100 loops=1)
+  Group Key: u."fullName", sp.id, u.email
+  Buffers: shared hit=909
+  ->  Sort  (cost=285.15..285.90 rows=300 width=111) (actual time=0.779..0.784 rows=300 loops=1)
+        Sort Key: u."fullName", sp.id, u.email
+        Sort Method: quicksort  Memory: 66kB
+        Buffers: shared hit=909
+        ->  Nested Loop Left Join  (cost=5.62..272.81 rows=300 width=111) (actual time=0.025..0.704 rows=300 loops=1)
+              Buffers: shared hit=906
+              ->  Nested Loop  (cost=5.34..198.14 rows=100 width=86) (actual time=0.021..0.299 rows=100 loops=1)
+                    Buffers: shared hit=406
+                    ->  Nested Loop  (cost=5.06..156.30 rows=100 width=68) (actual time=0.016..0.119 rows=100 loops=1)
+                          Buffers: shared hit=106
+                          ->  Seq Scan on "Institution" i  (cost=0.00..3.62 rows=1 width=16) (actual time=0.004..0.006 rows=1 loops=1)
+                                Filter: ("userId" = 'institution-user-001'::text)
+                                Rows Removed by Filter: 49
+                                Buffers: shared hit=3
+                          ->  Bitmap Heap Scan on "StudentProfile" sp  (cost=5.06..151.68 rows=100 width=84) (actual time=0.010..0.105 rows=100 loops=1)
+                                Recheck Cond: (i.id = "institutionId")
+                                Heap Blocks: exact=101
+                                Buffers: shared hit=103
+                                ->  Bitmap Index Scan on "StudentProfile_institutionId_idx"  (cost=0.00..5.03 rows=100 width=0) (actual time=0.005..0.005 rows=103 loops=1)
+                                      Index Cond: ("institutionId" = i.id)
+                                      Buffers: shared hit=2
+                    ->  Index Scan using "User_pkey" on "User" u  (cost=0.28..0.42 rows=1 width=55) (actual time=0.002..0.002 rows=1 loops=100)
+                          Index Cond: (id = sp."userId")
+                          Buffers: shared hit=300
+              ->  Index Scan using "AssessmentResult_studentProfileId_completedAt_idx" on "AssessmentResult" ar  (cost=0.29..0.72 rows=3 width=47) (actual time=0.002..0.004 rows=3 loops=100)
+                    Index Cond: ("studentProfileId" = sp.id)
+                    Buffers: shared hit=500
+Planning:
+  Buffers: shared hit=398
+Planning Time: 0.817 ms
+Execution Time: 0.883 ms
+
+==================== RUN 3: 0.943 ms ====================
+GroupAggregate  (cost=285.15..291.90 rows=300 width=94) (actual time=0.860..0.897 rows=100 loops=1)
+  Group Key: u."fullName", sp.id, u.email
+  Buffers: shared hit=909
+  ->  Sort  (cost=285.15..285.90 rows=300 width=111) (actual time=0.856..0.861 rows=300 loops=1)
+        Sort Key: u."fullName", sp.id, u.email
+        Sort Method: quicksort  Memory: 66kB
+        Buffers: shared hit=909
+        ->  Nested Loop Left Join  (cost=5.62..272.81 rows=300 width=111) (actual time=0.030..0.779 rows=300 loops=1)
+              Buffers: shared hit=906
+              ->  Nested Loop  (cost=5.34..198.14 rows=100 width=86) (actual time=0.025..0.334 rows=100 loops=1)
+                    Buffers: shared hit=406
+                    ->  Nested Loop  (cost=5.06..156.30 rows=100 width=68) (actual time=0.018..0.134 rows=100 loops=1)
+                          Buffers: shared hit=106
+                          ->  Seq Scan on "Institution" i  (cost=0.00..3.62 rows=1 width=16) (actual time=0.005..0.008 rows=1 loops=1)
+                                Filter: ("userId" = 'institution-user-001'::text)
+                                Rows Removed by Filter: 49
+                                Buffers: shared hit=3
+                          ->  Bitmap Heap Scan on "StudentProfile" sp  (cost=5.06..151.68 rows=100 width=84) (actual time=0.011..0.117 rows=100 loops=1)
+                                Recheck Cond: (i.id = "institutionId")
+                                Heap Blocks: exact=101
+                                Buffers: shared hit=103
+                                ->  Bitmap Index Scan on "StudentProfile_institutionId_idx"  (cost=0.00..5.03 rows=100 width=0) (actual time=0.006..0.006 rows=103 loops=1)
+                                      Index Cond: ("institutionId" = i.id)
+                                      Buffers: shared hit=2
+                    ->  Index Scan using "User_pkey" on "User" u  (cost=0.28..0.42 rows=1 width=55) (actual time=0.002..0.002 rows=1 loops=100)
+                          Index Cond: (id = sp."userId")
+                          Buffers: shared hit=300
+              ->  Index Scan using "AssessmentResult_studentProfileId_completedAt_idx" on "AssessmentResult" ar  (cost=0.29..0.72 rows=3 width=47) (actual time=0.003..0.004 rows=3 loops=100)
+                    Index Cond: ("studentProfileId" = sp.id)
+                    Buffers: shared hit=500
+Planning:
+  Buffers: shared hit=398
+Planning Time: 0.814 ms
+Execution Time: 0.943 ms

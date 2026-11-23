@@ -1,0 +1,60 @@
+Query: W21 (WRITE)
+Database: skillbridge_ap_cp4
+PostgreSQL: PostgreSQL 16.15 (Homebrew) on aarch64-apple-darwin27.0.0, compiled by Apple clang version 21.0.0 (clang-2100.3.34.2), 64-bit
+Runs: 3
+Parameters: ('industry-user-001', 'opportunity-0001', 'Updated Opportunity', 'Updated description', 'Responsibilities', 'Qualifications', 'Remote', 'REMOTE', '$80000', 3, 'https://example.test/apply', '2027-12-01 00:00:00', '2028-01-01 00:00:00', '2028-06-01 00:00:00')
+
+SQL:
+UPDATE "Opportunity" o SET "title"=COALESCE('Updated Opportunity',o."title"),"description"=COALESCE('Updated description',o."description"),"responsibilities"=COALESCE('Responsibilities',o."responsibilities"),"qualifications"=COALESCE('Qualifications',o."qualifications"),"location"=COALESCE('Remote',o."location"),"workMode"=COALESCE('REMOTE',o."workMode"),"compensation"=COALESCE('$80000',o."compensation"),"openings"=COALESCE(3,o."openings"),"applicationUrl"=COALESCE('https://example.test/apply',o."applicationUrl"),"applicationDeadline"=COALESCE('2027-12-01 00:00:00',o."applicationDeadline"),"startDate"=COALESCE('2028-01-01 00:00:00',o."startDate"),"endDate"=COALESCE('2028-06-01 00:00:00',o."endDate"),"updatedAt"=CURRENT_TIMESTAMP
+FROM "Company" c WHERE o."companyId"=c."id" AND c."userId"='industry-user-001' AND o."id"='opportunity-0001';
+
+==================== RUN 1: 0.125 ms ====================
+Update on "Opportunity" o  (cost=0.42..16.48 rows=0 width=0) (actual time=0.081..0.082 rows=0 loops=1)
+  Buffers: shared hit=25
+  ->  Nested Loop  (cost=0.42..16.48 rows=1 width=276) (actual time=0.012..0.012 rows=1 loops=1)
+        Join Filter: (o."companyId" = c.id)
+        Buffers: shared hit=5
+        ->  Index Scan using "Opportunity_pkey" on "Opportunity" o  (cost=0.28..8.29 rows=1 width=18) (actual time=0.006..0.007 rows=1 loops=1)
+              Index Cond: (id = 'opportunity-0001'::text)
+              Buffers: shared hit=3
+        ->  Index Scan using "Company_userId_key" on "Company" c  (cost=0.14..8.16 rows=1 width=18) (actual time=0.002..0.002 rows=1 loops=1)
+              Index Cond: ("userId" = 'industry-user-001'::text)
+              Buffers: shared hit=2
+Planning:
+  Buffers: shared hit=360
+Planning Time: 0.531 ms
+Execution Time: 0.125 ms
+
+==================== RUN 2: 0.132 ms ====================
+Update on "Opportunity" o  (cost=0.42..16.48 rows=0 width=0) (actual time=0.083..0.084 rows=0 loops=1)
+  Buffers: shared hit=28
+  ->  Nested Loop  (cost=0.42..16.48 rows=1 width=276) (actual time=0.016..0.018 rows=1 loops=1)
+        Join Filter: (o."companyId" = c.id)
+        Buffers: shared hit=7
+        ->  Index Scan using "Opportunity_pkey" on "Opportunity" o  (cost=0.28..8.29 rows=1 width=18) (actual time=0.010..0.012 rows=1 loops=1)
+              Index Cond: (id = 'opportunity-0001'::text)
+              Buffers: shared hit=5
+        ->  Index Scan using "Company_userId_key" on "Company" c  (cost=0.14..8.16 rows=1 width=18) (actual time=0.002..0.002 rows=1 loops=1)
+              Index Cond: ("userId" = 'industry-user-001'::text)
+              Buffers: shared hit=2
+Planning:
+  Buffers: shared hit=360
+Planning Time: 0.679 ms
+Execution Time: 0.132 ms
+
+==================== RUN 3: 0.102 ms ====================
+Update on "Opportunity" o  (cost=0.42..16.48 rows=0 width=0) (actual time=0.066..0.067 rows=0 loops=1)
+  Buffers: shared hit=28
+  ->  Nested Loop  (cost=0.42..16.48 rows=1 width=276) (actual time=0.013..0.014 rows=1 loops=1)
+        Join Filter: (o."companyId" = c.id)
+        Buffers: shared hit=7
+        ->  Index Scan using "Opportunity_pkey" on "Opportunity" o  (cost=0.28..8.29 rows=1 width=18) (actual time=0.007..0.009 rows=1 loops=1)
+              Index Cond: (id = 'opportunity-0001'::text)
+              Buffers: shared hit=5
+        ->  Index Scan using "Company_userId_key" on "Company" c  (cost=0.14..8.16 rows=1 width=18) (actual time=0.002..0.002 rows=1 loops=1)
+              Index Cond: ("userId" = 'industry-user-001'::text)
+              Buffers: shared hit=2
+Planning:
+  Buffers: shared hit=360
+Planning Time: 0.463 ms
+Execution Time: 0.102 ms

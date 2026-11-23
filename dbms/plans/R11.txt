@@ -1,0 +1,79 @@
+Query: R11 (READ)
+Database: skillbridge_ap_cp4
+PostgreSQL: PostgreSQL 16.15 (Homebrew) on aarch64-apple-darwin27.0.0, compiled by Apple clang version 21.0.0 (clang-2100.3.34.2), 64-bit
+Runs: 3
+Parameters: ('student-user-00001',)
+
+SQL:
+SELECT ss."studentProfileId", s."id" AS "skillId", s."name", s."category", ss."proficiencyLevel", ss."source"
+FROM "StudentSkill" ss JOIN "StudentProfile" sp ON sp."id"=ss."studentProfileId"
+JOIN "Skill" s ON s."id"=ss."skillId" WHERE sp."userId"='student-user-00001' ORDER BY s."name";
+
+==================== RUN 1: 0.055 ms ====================
+Sort  (cost=34.51..34.53 rows=10 width=58) (actual time=0.027..0.029 rows=10 loops=1)
+  Sort Key: s.name
+  Sort Method: quicksort  Memory: 25kB
+  Buffers: shared hit=32
+  ->  Nested Loop  (cost=0.84..34.34 rows=10 width=58) (actual time=0.013..0.019 rows=10 loops=1)
+        Buffers: shared hit=29
+        ->  Nested Loop  (cost=0.70..32.74 rows=10 width=40) (actual time=0.010..0.013 rows=10 loops=1)
+              Buffers: shared hit=9
+              ->  Index Scan using "StudentProfile_userId_key" on "StudentProfile" sp  (cost=0.28..8.30 rows=1 width=22) (actual time=0.004..0.005 rows=1 loops=1)
+                    Index Cond: ("userId" = 'student-user-00001'::text)
+                    Buffers: shared hit=5
+              ->  Index Scan using "StudentSkill_studentProfileId_skillId_key" on "StudentSkill" ss  (cost=0.41..24.34 rows=10 width=40) (actual time=0.005..0.005 rows=10 loops=1)
+                    Index Cond: ("studentProfileId" = sp.id)
+                    Buffers: shared hit=4
+        ->  Index Scan using "Skill_pkey" on "Skill" s  (cost=0.14..0.16 rows=1 width=28) (actual time=0.000..0.000 rows=1 loops=10)
+              Index Cond: (id = ss."skillId")
+              Buffers: shared hit=20
+Planning:
+  Buffers: shared hit=306 dirtied=1
+Planning Time: 0.656 ms
+Execution Time: 0.055 ms
+
+==================== RUN 2: 0.064 ms ====================
+Sort  (cost=34.51..34.53 rows=10 width=58) (actual time=0.032..0.033 rows=10 loops=1)
+  Sort Key: s.name
+  Sort Method: quicksort  Memory: 25kB
+  Buffers: shared hit=30
+  ->  Nested Loop  (cost=0.84..34.34 rows=10 width=58) (actual time=0.016..0.022 rows=10 loops=1)
+        Buffers: shared hit=27
+        ->  Nested Loop  (cost=0.70..32.74 rows=10 width=40) (actual time=0.013..0.015 rows=10 loops=1)
+              Buffers: shared hit=7
+              ->  Index Scan using "StudentProfile_userId_key" on "StudentProfile" sp  (cost=0.28..8.30 rows=1 width=22) (actual time=0.005..0.005 rows=1 loops=1)
+                    Index Cond: ("userId" = 'student-user-00001'::text)
+                    Buffers: shared hit=3
+              ->  Index Scan using "StudentSkill_studentProfileId_skillId_key" on "StudentSkill" ss  (cost=0.41..24.34 rows=10 width=40) (actual time=0.006..0.007 rows=10 loops=1)
+                    Index Cond: ("studentProfileId" = sp.id)
+                    Buffers: shared hit=4
+        ->  Index Scan using "Skill_pkey" on "Skill" s  (cost=0.14..0.16 rows=1 width=28) (actual time=0.001..0.001 rows=1 loops=10)
+              Index Cond: (id = ss."skillId")
+              Buffers: shared hit=20
+Planning:
+  Buffers: shared hit=304
+Planning Time: 0.627 ms
+Execution Time: 0.064 ms
+
+==================== RUN 3: 0.049 ms ====================
+Sort  (cost=34.51..34.53 rows=10 width=58) (actual time=0.023..0.025 rows=10 loops=1)
+  Sort Key: s.name
+  Sort Method: quicksort  Memory: 25kB
+  Buffers: shared hit=30
+  ->  Nested Loop  (cost=0.84..34.34 rows=10 width=58) (actual time=0.011..0.015 rows=10 loops=1)
+        Buffers: shared hit=27
+        ->  Nested Loop  (cost=0.70..32.74 rows=10 width=40) (actual time=0.009..0.010 rows=10 loops=1)
+              Buffers: shared hit=7
+              ->  Index Scan using "StudentProfile_userId_key" on "StudentProfile" sp  (cost=0.28..8.30 rows=1 width=22) (actual time=0.004..0.004 rows=1 loops=1)
+                    Index Cond: ("userId" = 'student-user-00001'::text)
+                    Buffers: shared hit=3
+              ->  Index Scan using "StudentSkill_studentProfileId_skillId_key" on "StudentSkill" ss  (cost=0.41..24.34 rows=10 width=40) (actual time=0.004..0.005 rows=10 loops=1)
+                    Index Cond: ("studentProfileId" = sp.id)
+                    Buffers: shared hit=4
+        ->  Index Scan using "Skill_pkey" on "Skill" s  (cost=0.14..0.16 rows=1 width=28) (actual time=0.000..0.000 rows=1 loops=10)
+              Index Cond: (id = ss."skillId")
+              Buffers: shared hit=20
+Planning:
+  Buffers: shared hit=304
+Planning Time: 0.611 ms
+Execution Time: 0.049 ms

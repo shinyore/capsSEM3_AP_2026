@@ -1,0 +1,52 @@
+Query: R10 (READ)
+Database: skillbridge_ap_cp4
+PostgreSQL: PostgreSQL 16.15 (Homebrew) on aarch64-apple-darwin27.0.0, compiled by Apple clang version 21.0.0 (clang-2100.3.34.2), 64-bit
+Runs: 3
+Parameters: ('Engineering', 'Skill')
+
+SQL:
+SELECT "id","name","category","description" FROM "Skill"
+WHERE ('Engineering'::TEXT IS NULL OR "category"='Engineering') AND ('Skill'::TEXT IS NULL OR "name" ILIKE '%' || 'Skill' || '%')
+ORDER BY "category","name";
+
+==================== RUN 1: 0.035 ms ====================
+Sort  (cost=4.08..4.14 rows=25 width=46) (actual time=0.026..0.028 rows=25 loops=1)
+  Sort Key: name
+  Sort Method: quicksort  Memory: 26kB
+  Buffers: shared hit=5
+  ->  Seq Scan on "Skill"  (cost=0.00..3.50 rows=25 width=46) (actual time=0.006..0.018 rows=25 loops=1)
+        Filter: ((name ~~* '%Skill%'::text) AND (category = 'Engineering'::text))
+        Rows Removed by Filter: 75
+        Buffers: shared hit=2
+Planning:
+  Buffers: shared hit=108
+Planning Time: 0.234 ms
+Execution Time: 0.035 ms
+
+==================== RUN 2: 0.039 ms ====================
+Sort  (cost=4.08..4.14 rows=25 width=46) (actual time=0.029..0.031 rows=25 loops=1)
+  Sort Key: name
+  Sort Method: quicksort  Memory: 26kB
+  Buffers: shared hit=5
+  ->  Seq Scan on "Skill"  (cost=0.00..3.50 rows=25 width=46) (actual time=0.007..0.020 rows=25 loops=1)
+        Filter: ((name ~~* '%Skill%'::text) AND (category = 'Engineering'::text))
+        Rows Removed by Filter: 75
+        Buffers: shared hit=2
+Planning:
+  Buffers: shared hit=108
+Planning Time: 0.238 ms
+Execution Time: 0.039 ms
+
+==================== RUN 3: 0.038 ms ====================
+Sort  (cost=4.08..4.14 rows=25 width=46) (actual time=0.028..0.029 rows=25 loops=1)
+  Sort Key: name
+  Sort Method: quicksort  Memory: 26kB
+  Buffers: shared hit=5
+  ->  Seq Scan on "Skill"  (cost=0.00..3.50 rows=25 width=46) (actual time=0.006..0.018 rows=25 loops=1)
+        Filter: ((name ~~* '%Skill%'::text) AND (category = 'Engineering'::text))
+        Rows Removed by Filter: 75
+        Buffers: shared hit=2
+Planning:
+  Buffers: shared hit=108
+Planning Time: 0.244 ms
+Execution Time: 0.038 ms

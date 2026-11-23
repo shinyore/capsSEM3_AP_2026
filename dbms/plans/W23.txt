@@ -1,0 +1,62 @@
+Query: W23 (WRITE)
+Database: skillbridge_ap_cp4
+PostgreSQL: PostgreSQL 16.15 (Homebrew) on aarch64-apple-darwin27.0.0, compiled by Apple clang version 21.0.0 (clang-2100.3.34.2), 64-bit
+Runs: 3
+Parameters: ('industry-user-100', 'opportunity-1100')
+
+SQL:
+DELETE FROM "Opportunity" o USING "Company" c WHERE o."companyId"=c."id" AND c."userId"='industry-user-100' AND o."id"='opportunity-1100';
+
+==================== RUN 1: 0.284 ms ====================
+Delete on "Opportunity" o  (cost=0.42..16.47 rows=0 width=0) (actual time=0.031..0.033 rows=0 loops=1)
+  Buffers: shared hit=10
+  ->  Nested Loop  (cost=0.42..16.47 rows=1 width=12) (actual time=0.009..0.009 rows=1 loops=1)
+        Join Filter: (o."companyId" = c.id)
+        Buffers: shared hit=5
+        ->  Index Scan using "Opportunity_pkey" on "Opportunity" o  (cost=0.28..8.29 rows=1 width=18) (actual time=0.005..0.006 rows=1 loops=1)
+              Index Cond: (id = 'opportunity-1100'::text)
+              Buffers: shared hit=3
+        ->  Index Scan using "Company_userId_key" on "Company" c  (cost=0.14..8.16 rows=1 width=18) (actual time=0.002..0.002 rows=1 loops=1)
+              Index Cond: ("userId" = 'industry-user-100'::text)
+              Buffers: shared hit=2
+Planning:
+  Buffers: shared hit=361
+Planning Time: 0.481 ms
+Trigger for constraint Application_opportunityId_fkey: time=0.211 calls=1
+Execution Time: 0.284 ms
+
+==================== RUN 2: 0.263 ms ====================
+Delete on "Opportunity" o  (cost=0.42..16.47 rows=0 width=0) (actual time=0.033..0.034 rows=0 loops=1)
+  Buffers: shared hit=10
+  ->  Nested Loop  (cost=0.42..16.47 rows=1 width=12) (actual time=0.011..0.011 rows=1 loops=1)
+        Join Filter: (o."companyId" = c.id)
+        Buffers: shared hit=5
+        ->  Index Scan using "Opportunity_pkey" on "Opportunity" o  (cost=0.28..8.29 rows=1 width=18) (actual time=0.007..0.008 rows=1 loops=1)
+              Index Cond: (id = 'opportunity-1100'::text)
+              Buffers: shared hit=3
+        ->  Index Scan using "Company_userId_key" on "Company" c  (cost=0.14..8.16 rows=1 width=18) (actual time=0.002..0.002 rows=1 loops=1)
+              Index Cond: ("userId" = 'industry-user-100'::text)
+              Buffers: shared hit=2
+Planning:
+  Buffers: shared hit=361
+Planning Time: 0.486 ms
+Trigger for constraint Application_opportunityId_fkey: time=0.189 calls=1
+Execution Time: 0.263 ms
+
+==================== RUN 3: 0.252 ms ====================
+Delete on "Opportunity" o  (cost=0.42..16.47 rows=0 width=0) (actual time=0.032..0.033 rows=0 loops=1)
+  Buffers: shared hit=10
+  ->  Nested Loop  (cost=0.42..16.47 rows=1 width=12) (actual time=0.010..0.011 rows=1 loops=1)
+        Join Filter: (o."companyId" = c.id)
+        Buffers: shared hit=5
+        ->  Index Scan using "Opportunity_pkey" on "Opportunity" o  (cost=0.28..8.29 rows=1 width=18) (actual time=0.007..0.007 rows=1 loops=1)
+              Index Cond: (id = 'opportunity-1100'::text)
+              Buffers: shared hit=3
+        ->  Index Scan using "Company_userId_key" on "Company" c  (cost=0.14..8.16 rows=1 width=18) (actual time=0.002..0.002 rows=1 loops=1)
+              Index Cond: ("userId" = 'industry-user-100'::text)
+              Buffers: shared hit=2
+Planning:
+  Buffers: shared hit=361
+Planning Time: 0.482 ms
+Trigger for constraint Application_opportunityId_fkey: time=0.180 calls=1
+Execution Time: 0.252 ms

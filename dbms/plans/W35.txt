@@ -1,0 +1,38 @@
+Query: W35 (WRITE)
+Database: skillbridge_ap_cp4
+PostgreSQL: PostgreSQL 16.15 (Homebrew) on aarch64-apple-darwin27.0.0, compiled by Apple clang version 21.0.0 (clang-2100.3.34.2), 64-bit
+Runs: 3
+Parameters: ('bench-created-placement', 'student-profile-00001', 'institution-001', 'company-001', 'Benchmark role', '$90000', 'Synthetic placement')
+
+SQL:
+INSERT INTO "Placement" ("id","studentProfileId","institutionId","companyId","role","compensation","notes","updatedAt") VALUES ('bench-created-placement','student-profile-00001','institution-001','company-001','Benchmark role','$90000','Synthetic placement',CURRENT_TIMESTAMP);
+
+==================== RUN 1: 0.633 ms ====================
+Insert on "Placement"  (cost=0.00..0.03 rows=0 width=0) (actual time=0.112..0.113 rows=0 loops=1)
+  Buffers: shared hit=75
+  ->  Result  (cost=0.00..0.03 rows=1 width=248) (actual time=0.005..0.006 rows=1 loops=1)
+Planning Time: 0.027 ms
+Trigger for constraint Placement_studentProfileId_fkey: time=0.245 calls=1
+Trigger for constraint Placement_institutionId_fkey: time=0.125 calls=1
+Trigger for constraint Placement_companyId_fkey: time=0.133 calls=1
+Execution Time: 0.633 ms
+
+==================== RUN 2: 0.624 ms ====================
+Insert on "Placement"  (cost=0.00..0.03 rows=0 width=0) (actual time=0.096..0.097 rows=0 loops=1)
+  Buffers: shared hit=76
+  ->  Result  (cost=0.00..0.03 rows=1 width=248) (actual time=0.005..0.005 rows=1 loops=1)
+Planning Time: 0.026 ms
+Trigger for constraint Placement_studentProfileId_fkey: time=0.258 calls=1
+Trigger for constraint Placement_institutionId_fkey: time=0.121 calls=1
+Trigger for constraint Placement_companyId_fkey: time=0.131 calls=1
+Execution Time: 0.624 ms
+
+==================== RUN 3: 0.671 ms ====================
+Insert on "Placement"  (cost=0.00..0.03 rows=0 width=0) (actual time=0.119..0.121 rows=0 loops=1)
+  Buffers: shared hit=76
+  ->  Result  (cost=0.00..0.03 rows=1 width=248) (actual time=0.006..0.007 rows=1 loops=1)
+Planning Time: 0.031 ms
+Trigger for constraint Placement_studentProfileId_fkey: time=0.269 calls=1
+Trigger for constraint Placement_institutionId_fkey: time=0.127 calls=1
+Trigger for constraint Placement_companyId_fkey: time=0.136 calls=1
+Execution Time: 0.671 ms

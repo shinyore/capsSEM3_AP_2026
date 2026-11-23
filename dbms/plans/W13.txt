@@ -1,0 +1,48 @@
+Query: W13 (WRITE)
+Database: skillbridge_ap_cp4
+PostgreSQL: PostgreSQL 16.15 (Homebrew) on aarch64-apple-darwin27.0.0, compiled by Apple clang version 21.0.0 (clang-2100.3.34.2), 64-bit
+Runs: 3
+Parameters: ('bench-upsert-student-skill', 'student-profile-00001', 'skill-001', 'ADVANCED', 'MANUAL')
+
+SQL:
+INSERT INTO "StudentSkill" ("id","studentProfileId","skillId","proficiencyLevel","source","updatedAt") VALUES ('bench-upsert-student-skill','student-profile-00001','skill-001','ADVANCED','MANUAL',CURRENT_TIMESTAMP)
+ON CONFLICT ("studentProfileId","skillId") DO UPDATE SET "proficiencyLevel"=EXCLUDED."proficiencyLevel", "source"=EXCLUDED."source", "updatedAt"=CURRENT_TIMESTAMP;
+
+==================== RUN 1: 0.189 ms ====================
+Insert on "StudentSkill"  (cost=0.00..0.03 rows=0 width=0) (actual time=0.142..0.143 rows=0 loops=1)
+  Conflict Resolution: UPDATE
+  Conflict Arbiter Indexes: StudentSkill_studentProfileId_skillId_key
+  Tuples Inserted: 0
+  Conflicting Tuples: 1
+  Buffers: shared hit=40 dirtied=4
+  ->  Result  (cost=0.00..0.03 rows=1 width=120) (actual time=0.005..0.006 rows=1 loops=1)
+Planning:
+  Buffers: shared hit=63
+Planning Time: 0.061 ms
+Execution Time: 0.189 ms
+
+==================== RUN 2: 0.182 ms ====================
+Insert on "StudentSkill"  (cost=0.00..0.03 rows=0 width=0) (actual time=0.133..0.134 rows=0 loops=1)
+  Conflict Resolution: UPDATE
+  Conflict Arbiter Indexes: StudentSkill_studentProfileId_skillId_key
+  Tuples Inserted: 0
+  Conflicting Tuples: 1
+  Buffers: shared hit=39
+  ->  Result  (cost=0.00..0.03 rows=1 width=120) (actual time=0.007..0.007 rows=1 loops=1)
+Planning:
+  Buffers: shared hit=63
+Planning Time: 0.063 ms
+Execution Time: 0.182 ms
+
+==================== RUN 3: 0.206 ms ====================
+Insert on "StudentSkill"  (cost=0.00..0.03 rows=0 width=0) (actual time=0.155..0.156 rows=0 loops=1)
+  Conflict Resolution: UPDATE
+  Conflict Arbiter Indexes: StudentSkill_studentProfileId_skillId_key
+  Tuples Inserted: 0
+  Conflicting Tuples: 1
+  Buffers: shared hit=39
+  ->  Result  (cost=0.00..0.03 rows=1 width=120) (actual time=0.008..0.009 rows=1 loops=1)
+Planning:
+  Buffers: shared hit=63
+Planning Time: 0.060 ms
+Execution Time: 0.206 ms

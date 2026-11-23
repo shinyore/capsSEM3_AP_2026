@@ -1,0 +1,39 @@
+Query: W3 (WRITE)
+Database: skillbridge_ap_cp4
+PostgreSQL: PostgreSQL 16.15 (Homebrew) on aarch64-apple-darwin27.0.0, compiled by Apple clang version 21.0.0 (clang-2100.3.34.2), 64-bit
+Runs: 3
+Parameters: ('bench-created-institution', 'bench-w3-user', 'Benchmark Institute', 'bench-inst@example.test')
+
+SQL:
+INSERT INTO "Institution" ("id", "userId", "name", "officialEmail", "updatedAt")
+VALUES ('bench-created-institution', 'bench-w3-user', 'Benchmark Institute', 'bench-inst@example.test', CURRENT_TIMESTAMP);
+
+==================== RUN 1: 0.381 ms ====================
+Insert on "Institution"  (cost=0.00..0.03 rows=0 width=0) (actual time=0.122..0.123 rows=0 loops=1)
+  Buffers: shared hit=80 dirtied=4
+  ->  Result  (cost=0.00..0.03 rows=1 width=273) (actual time=0.005..0.005 rows=1 loops=1)
+Planning:
+  Buffers: shared hit=3
+Planning Time: 0.025 ms
+Trigger for constraint Institution_userId_fkey: time=0.243 calls=1
+Execution Time: 0.381 ms
+
+==================== RUN 2: 0.309 ms ====================
+Insert on "Institution"  (cost=0.00..0.03 rows=0 width=0) (actual time=0.095..0.095 rows=0 loops=1)
+  Buffers: shared hit=83
+  ->  Result  (cost=0.00..0.03 rows=1 width=273) (actual time=0.005..0.005 rows=1 loops=1)
+Planning:
+  Buffers: shared hit=3
+Planning Time: 0.023 ms
+Trigger for constraint Institution_userId_fkey: time=0.200 calls=1
+Execution Time: 0.309 ms
+
+==================== RUN 3: 0.277 ms ====================
+Insert on "Institution"  (cost=0.00..0.03 rows=0 width=0) (actual time=0.080..0.080 rows=0 loops=1)
+  Buffers: shared hit=83
+  ->  Result  (cost=0.00..0.03 rows=1 width=273) (actual time=0.004..0.004 rows=1 loops=1)
+Planning:
+  Buffers: shared hit=3
+Planning Time: 0.021 ms
+Trigger for constraint Institution_userId_fkey: time=0.183 calls=1
+Execution Time: 0.277 ms

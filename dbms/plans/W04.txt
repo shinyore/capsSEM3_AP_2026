@@ -1,0 +1,39 @@
+Query: W4 (WRITE)
+Database: skillbridge_ap_cp4
+PostgreSQL: PostgreSQL 16.15 (Homebrew) on aarch64-apple-darwin27.0.0, compiled by Apple clang version 21.0.0 (clang-2100.3.34.2), 64-bit
+Runs: 3
+Parameters: ('bench-created-company', 'bench-w4-user', 'Benchmark Company', 'bench-company@example.test')
+
+SQL:
+INSERT INTO "Company" ("id", "userId", "name", "officialEmail", "updatedAt")
+VALUES ('bench-created-company', 'bench-w4-user', 'Benchmark Company', 'bench-company@example.test', CURRENT_TIMESTAMP);
+
+==================== RUN 1: 0.342 ms ====================
+Insert on "Company"  (cost=0.00..0.03 rows=0 width=0) (actual time=0.113..0.113 rows=0 loops=1)
+  Buffers: shared hit=80 dirtied=4
+  ->  Result  (cost=0.00..0.03 rows=1 width=273) (actual time=0.005..0.005 rows=1 loops=1)
+Planning:
+  Buffers: shared hit=3
+Planning Time: 0.026 ms
+Trigger for constraint Company_userId_fkey: time=0.213 calls=1
+Execution Time: 0.342 ms
+
+==================== RUN 2: 0.351 ms ====================
+Insert on "Company"  (cost=0.00..0.03 rows=0 width=0) (actual time=0.116..0.117 rows=0 loops=1)
+  Buffers: shared hit=83
+  ->  Result  (cost=0.00..0.03 rows=1 width=273) (actual time=0.006..0.006 rows=1 loops=1)
+Planning:
+  Buffers: shared hit=3
+Planning Time: 0.028 ms
+Trigger for constraint Company_userId_fkey: time=0.217 calls=1
+Execution Time: 0.351 ms
+
+==================== RUN 3: 0.334 ms ====================
+Insert on "Company"  (cost=0.00..0.03 rows=0 width=0) (actual time=0.104..0.104 rows=0 loops=1)
+  Buffers: shared hit=83
+  ->  Result  (cost=0.00..0.03 rows=1 width=273) (actual time=0.005..0.006 rows=1 loops=1)
+Planning:
+  Buffers: shared hit=3
+Planning Time: 0.027 ms
+Trigger for constraint Company_userId_fkey: time=0.212 calls=1
+Execution Time: 0.334 ms

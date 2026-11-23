@@ -1,0 +1,49 @@
+Query: W7 (WRITE)
+Database: skillbridge_ap_cp4
+PostgreSQL: PostgreSQL 16.15 (Homebrew) on aarch64-apple-darwin27.0.0, compiled by Apple clang version 21.0.0 (clang-2100.3.34.2), 64-bit
+Runs: 3
+Parameters: ('bench-upsert-profile', 'student-user-00001', 'institution-001', 'B.Tech', 'Computing', 2027, 6, 'Updated bio', None, 'https://example.test/r', 'https://example.test/in', 'https://example.test/gh', 'https://example.test')
+
+SQL:
+INSERT INTO "StudentProfile" ("id", "userId", "institutionId", "degree", "department", "graduationYear", "semester", "bio", "profileImage", "resumeUrl", "linkedIn", "github", "portfolio", "updatedAt")
+VALUES ('bench-upsert-profile','student-user-00001','institution-001','B.Tech','Computing',2027,6,'Updated bio',NULL,'https://example.test/r','https://example.test/in','https://example.test/gh','https://example.test',CURRENT_TIMESTAMP)
+ON CONFLICT ("userId") DO UPDATE SET "institutionId"=EXCLUDED."institutionId", "degree"=EXCLUDED."degree", "department"=EXCLUDED."department", "graduationYear"=EXCLUDED."graduationYear", "semester"=EXCLUDED."semester", "bio"=EXCLUDED."bio", "profileImage"=EXCLUDED."profileImage", "resumeUrl"=EXCLUDED."resumeUrl", "linkedIn"=EXCLUDED."linkedIn", "github"=EXCLUDED."github", "portfolio"=EXCLUDED."portfolio", "updatedAt"=CURRENT_TIMESTAMP;
+
+==================== RUN 1: 0.182 ms ====================
+Insert on "StudentProfile"  (cost=0.00..0.03 rows=0 width=0) (actual time=0.135..0.136 rows=0 loops=1)
+  Conflict Resolution: UPDATE
+  Conflict Arbiter Indexes: StudentProfile_userId_key
+  Tuples Inserted: 0
+  Conflicting Tuples: 1
+  Buffers: shared hit=51 dirtied=1
+  ->  Result  (cost=0.00..0.03 rows=1 width=376) (actual time=0.007..0.007 rows=1 loops=1)
+Planning:
+  Buffers: shared hit=72
+Planning Time: 0.067 ms
+Execution Time: 0.182 ms
+
+==================== RUN 2: 0.146 ms ====================
+Insert on "StudentProfile"  (cost=0.00..0.03 rows=0 width=0) (actual time=0.102..0.103 rows=0 loops=1)
+  Conflict Resolution: UPDATE
+  Conflict Arbiter Indexes: StudentProfile_userId_key
+  Tuples Inserted: 0
+  Conflicting Tuples: 1
+  Buffers: shared hit=51
+  ->  Result  (cost=0.00..0.03 rows=1 width=376) (actual time=0.005..0.005 rows=1 loops=1)
+Planning:
+  Buffers: shared hit=72
+Planning Time: 0.060 ms
+Execution Time: 0.146 ms
+
+==================== RUN 3: 0.139 ms ====================
+Insert on "StudentProfile"  (cost=0.00..0.03 rows=0 width=0) (actual time=0.101..0.101 rows=0 loops=1)
+  Conflict Resolution: UPDATE
+  Conflict Arbiter Indexes: StudentProfile_userId_key
+  Tuples Inserted: 0
+  Conflicting Tuples: 1
+  Buffers: shared hit=51
+  ->  Result  (cost=0.00..0.03 rows=1 width=376) (actual time=0.005..0.005 rows=1 loops=1)
+Planning:
+  Buffers: shared hit=72
+Planning Time: 0.056 ms
+Execution Time: 0.139 ms

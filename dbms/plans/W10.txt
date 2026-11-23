@@ -1,0 +1,44 @@
+Query: W10 (WRITE)
+Database: skillbridge_ap_cp4
+PostgreSQL: PostgreSQL 16.15 (Homebrew) on aarch64-apple-darwin27.0.0, compiled by Apple clang version 21.0.0 (clang-2100.3.34.2), 64-bit
+Runs: 3
+Parameters: ('institution-001', True)
+
+SQL:
+UPDATE "Institution" SET "isVerified"=TRUE, "updatedAt"=CURRENT_TIMESTAMP WHERE "id"='institution-001';
+
+==================== RUN 1: 0.084 ms ====================
+Update on "Institution"  (cost=0.00..3.63 rows=0 width=0) (actual time=0.049..0.050 rows=0 loops=1)
+  Buffers: shared hit=24
+  ->  Seq Scan on "Institution"  (cost=0.00..3.63 rows=1 width=15) (actual time=0.010..0.015 rows=1 loops=1)
+        Filter: (id = 'institution-001'::text)
+        Rows Removed by Filter: 49
+        Buffers: shared hit=3
+Planning:
+  Buffers: shared hit=110
+Planning Time: 0.198 ms
+Execution Time: 0.084 ms
+
+==================== RUN 2: 0.089 ms ====================
+Update on "Institution"  (cost=0.00..3.63 rows=0 width=0) (actual time=0.051..0.052 rows=0 loops=1)
+  Buffers: shared hit=25
+  ->  Seq Scan on "Institution"  (cost=0.00..3.63 rows=1 width=15) (actual time=0.009..0.014 rows=1 loops=1)
+        Filter: (id = 'institution-001'::text)
+        Rows Removed by Filter: 49
+        Buffers: shared hit=3
+Planning:
+  Buffers: shared hit=110
+Planning Time: 0.199 ms
+Execution Time: 0.089 ms
+
+==================== RUN 3: 0.093 ms ====================
+Update on "Institution"  (cost=0.00..3.63 rows=0 width=0) (actual time=0.056..0.056 rows=0 loops=1)
+  Buffers: shared hit=25
+  ->  Seq Scan on "Institution"  (cost=0.00..3.63 rows=1 width=15) (actual time=0.011..0.017 rows=1 loops=1)
+        Filter: (id = 'institution-001'::text)
+        Rows Removed by Filter: 49
+        Buffers: shared hit=3
+Planning:
+  Buffers: shared hit=110
+Planning Time: 0.209 ms
+Execution Time: 0.093 ms

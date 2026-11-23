@@ -1,0 +1,45 @@
+Query: W20 (WRITE)
+Database: skillbridge_ap_cp4
+PostgreSQL: PostgreSQL 16.15 (Homebrew) on aarch64-apple-darwin27.0.0, compiled by Apple clang version 21.0.0 (clang-2100.3.34.2), 64-bit
+Runs: 3
+Parameters: ('bench-created-opportunity', 'industry-user-001', 'Benchmark Opportunity', 'INTERNSHIP', 'Description', 'Responsibilities', 'Qualifications', 'Remote', 'REMOTE', '$70000', 2, 'https://example.test/apply', '2027-12-01 00:00:00', '2028-01-01 00:00:00', '2028-06-01 00:00:00', 'OPEN', '2026-11-23 00:00:00')
+
+SQL:
+INSERT INTO "Opportunity" ("id","companyId","title","type","description","responsibilities","qualifications","location","workMode","compensation","openings","applicationUrl","applicationDeadline","startDate","endDate","status","publishedAt","updatedAt")
+SELECT 'bench-created-opportunity',c."id",'Benchmark Opportunity','INTERNSHIP','Description','Responsibilities','Qualifications','Remote','REMOTE','$70000',2,'https://example.test/apply','2027-12-01 00:00:00','2028-01-01 00:00:00','2028-06-01 00:00:00','OPEN','2026-11-23 00:00:00',CURRENT_TIMESTAMP FROM "Company" c WHERE c."userId"='industry-user-001';
+
+==================== RUN 1: 0.209 ms ====================
+Insert on "Opportunity"  (cost=0.14..8.18 rows=0 width=0) (actual time=0.129..0.130 rows=0 loops=1)
+  Buffers: shared hit=91
+  ->  Index Scan using "Company_userId_key" on "Company" c  (cost=0.14..8.18 rows=1 width=332) (actual time=0.017..0.018 rows=1 loops=1)
+        Index Cond: ("userId" = 'industry-user-001'::text)
+        Buffers: shared hit=2
+Planning:
+  Buffers: shared hit=138
+Planning Time: 0.232 ms
+Trigger for constraint Opportunity_companyId_fkey: time=0.066 calls=1
+Execution Time: 0.209 ms
+
+==================== RUN 2: 0.196 ms ====================
+Insert on "Opportunity"  (cost=0.14..8.18 rows=0 width=0) (actual time=0.116..0.117 rows=0 loops=1)
+  Buffers: shared hit=92
+  ->  Index Scan using "Company_userId_key" on "Company" c  (cost=0.14..8.18 rows=1 width=332) (actual time=0.010..0.010 rows=1 loops=1)
+        Index Cond: ("userId" = 'industry-user-001'::text)
+        Buffers: shared hit=2
+Planning:
+  Buffers: shared hit=138
+Planning Time: 0.226 ms
+Trigger for constraint Opportunity_companyId_fkey: time=0.065 calls=1
+Execution Time: 0.196 ms
+
+==================== RUN 3: 0.186 ms ====================
+Insert on "Opportunity"  (cost=0.14..8.18 rows=0 width=0) (actual time=0.110..0.111 rows=0 loops=1)
+  Buffers: shared hit=92
+  ->  Index Scan using "Company_userId_key" on "Company" c  (cost=0.14..8.18 rows=1 width=332) (actual time=0.010..0.011 rows=1 loops=1)
+        Index Cond: ("userId" = 'industry-user-001'::text)
+        Buffers: shared hit=2
+Planning:
+  Buffers: shared hit=138
+Planning Time: 0.220 ms
+Trigger for constraint Opportunity_companyId_fkey: time=0.062 calls=1
+Execution Time: 0.186 ms

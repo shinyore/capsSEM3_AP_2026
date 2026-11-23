@@ -1,0 +1,44 @@
+Query: W39 (WRITE)
+Database: skillbridge_ap_cp4
+PostgreSQL: PostgreSQL 16.15 (Homebrew) on aarch64-apple-darwin27.0.0, compiled by Apple clang version 21.0.0 (clang-2100.3.34.2), 64-bit
+Runs: 3
+Parameters: ('notification-000001', 'student-user-00001')
+
+SQL:
+DELETE FROM "Notification" WHERE "id"='notification-000001' AND "userId"='student-user-00001';
+
+==================== RUN 1: 0.055 ms ====================
+Delete on "Notification"  (cost=0.29..8.31 rows=0 width=0) (actual time=0.018..0.019 rows=0 loops=1)
+  Buffers: shared hit=6
+  ->  Index Scan using "Notification_pkey" on "Notification"  (cost=0.29..8.31 rows=1 width=6) (actual time=0.008..0.011 rows=1 loops=1)
+        Index Cond: (id = 'notification-000001'::text)
+        Filter: ("userId" = 'student-user-00001'::text)
+        Buffers: shared hit=5
+Planning:
+  Buffers: shared hit=94
+Planning Time: 0.168 ms
+Execution Time: 0.055 ms
+
+==================== RUN 2: 0.047 ms ====================
+Delete on "Notification"  (cost=0.29..8.31 rows=0 width=0) (actual time=0.014..0.015 rows=0 loops=1)
+  Buffers: shared hit=4
+  ->  Index Scan using "Notification_pkey" on "Notification"  (cost=0.29..8.31 rows=1 width=6) (actual time=0.006..0.007 rows=1 loops=1)
+        Index Cond: (id = 'notification-000001'::text)
+        Filter: ("userId" = 'student-user-00001'::text)
+        Buffers: shared hit=3
+Planning:
+  Buffers: shared hit=94
+Planning Time: 0.138 ms
+Execution Time: 0.047 ms
+
+==================== RUN 3: 0.049 ms ====================
+Delete on "Notification"  (cost=0.29..8.31 rows=0 width=0) (actual time=0.015..0.015 rows=0 loops=1)
+  Buffers: shared hit=4
+  ->  Index Scan using "Notification_pkey" on "Notification"  (cost=0.29..8.31 rows=1 width=6) (actual time=0.007..0.007 rows=1 loops=1)
+        Index Cond: (id = 'notification-000001'::text)
+        Filter: ("userId" = 'student-user-00001'::text)
+        Buffers: shared hit=3
+Planning:
+  Buffers: shared hit=94
+Planning Time: 0.148 ms
+Execution Time: 0.049 ms

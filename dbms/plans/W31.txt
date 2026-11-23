@@ -1,0 +1,33 @@
+Query: W31 (WRITE)
+Database: skillbridge_ap_cp4
+PostgreSQL: PostgreSQL 16.15 (Homebrew) on aarch64-apple-darwin27.0.0, compiled by Apple clang version 21.0.0 (clang-2100.3.34.2), 64-bit
+Runs: 3
+Parameters: ('bench-created-interview', 'application-000001', '2027-01-10 10:00:00', 'Video call', 'https://example.test/meeting', 'Synthetic interview')
+
+SQL:
+INSERT INTO "Interview" ("id","applicationId","scheduledAt","location","meetingUrl","notes","status","updatedAt")
+VALUES ('bench-created-interview','application-000001','2027-01-10 10:00:00','Video call','https://example.test/meeting','Synthetic interview','SCHEDULED',CURRENT_TIMESTAMP);
+
+==================== RUN 1: 0.401 ms ====================
+Insert on "Interview"  (cost=0.00..0.03 rows=0 width=0) (actual time=0.136..0.137 rows=0 loops=1)
+  Buffers: shared hit=61
+  ->  Result  (cost=0.00..0.03 rows=1 width=188) (actual time=0.003..0.003 rows=1 loops=1)
+Planning Time: 0.034 ms
+Trigger for constraint Interview_applicationId_fkey: time=0.253 calls=1
+Execution Time: 0.401 ms
+
+==================== RUN 2: 0.408 ms ====================
+Insert on "Interview"  (cost=0.00..0.03 rows=0 width=0) (actual time=0.107..0.108 rows=0 loops=1)
+  Buffers: shared hit=61
+  ->  Result  (cost=0.00..0.03 rows=1 width=188) (actual time=0.003..0.003 rows=1 loops=1)
+Planning Time: 0.036 ms
+Trigger for constraint Interview_applicationId_fkey: time=0.289 calls=1
+Execution Time: 0.408 ms
+
+==================== RUN 3: 0.436 ms ====================
+Insert on "Interview"  (cost=0.00..0.03 rows=0 width=0) (actual time=0.118..0.119 rows=0 loops=1)
+  Buffers: shared hit=61
+  ->  Result  (cost=0.00..0.03 rows=1 width=188) (actual time=0.004..0.004 rows=1 loops=1)
+Planning Time: 0.040 ms
+Trigger for constraint Interview_applicationId_fkey: time=0.306 calls=1
+Execution Time: 0.436 ms

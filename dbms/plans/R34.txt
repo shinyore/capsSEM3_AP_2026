@@ -1,0 +1,220 @@
+Query: R34 (READ)
+Database: skillbridge_ap_cp4
+PostgreSQL: PostgreSQL 16.15 (Homebrew) on aarch64-apple-darwin27.0.0, compiled by Apple clang version 21.0.0 (clang-2100.3.34.2), 64-bit
+Runs: 3
+Parameters: ('industry-user-001',)
+
+SQL:
+SELECT (SELECT COUNT(*) FROM "Interview" it JOIN "Application" a ON a."id"=it."applicationId" JOIN "Opportunity" o ON o."id"=a."opportunityId" JOIN "Company" c ON c."id"=o."companyId" WHERE c."userId"='industry-user-001' AND it."status"='SCHEDULED') AS "scheduledInterviews",
+ (SELECT COUNT(*) FROM "Internship" it JOIN "Company" c ON c."id"=it."companyId" WHERE c."userId"='industry-user-001') AS "internships",
+ (SELECT COUNT(*) FROM "Application" a JOIN "Opportunity" o ON o."id"=a."opportunityId" JOIN "Company" c ON c."id"=o."companyId" WHERE c."userId"='industry-user-001' AND a."createdAt">=CURRENT_TIMESTAMP-INTERVAL '7 days') AS "newApplications";
+
+==================== RUN 1: 0.404 ms ====================
+Result  (cost=159.17..159.18 rows=1 width=24) (actual time=0.355..0.357 rows=1 loops=1)
+  Buffers: shared hit=500
+  InitPlan 1 (returns $3)
+    ->  Aggregate  (cost=70.14..70.15 rows=1 width=8) (actual time=0.230..0.230 rows=1 loops=1)
+          Buffers: shared hit=348
+          ->  Nested Loop  (cost=5.04..70.09 rows=17 width=0) (actual time=0.024..0.227 rows=25 loops=1)
+                Buffers: shared hit=348
+                ->  Nested Loop  (cost=4.76..41.35 rows=83 width=19) (actual time=0.011..0.117 rows=100 loops=1)
+                      Buffers: shared hit=123
+                      ->  Nested Loop  (cost=4.47..29.27 rows=5 width=17) (actual time=0.008..0.013 rows=6 loops=1)
+                            Buffers: shared hit=11
+                            ->  Index Scan using "Company_userId_key" on "Company" c  (cost=0.14..8.16 rows=1 width=12) (actual time=0.003..0.003 rows=1 loops=1)
+                                  Index Cond: ("userId" = 'industry-user-001'::text)
+                                  Buffers: shared hit=2
+                            ->  Bitmap Heap Scan on "Opportunity" o  (cost=4.32..21.05 rows=6 width=29) (actual time=0.004..0.008 rows=6 loops=1)
+                                  Recheck Cond: ("companyId" = c.id)
+                                  Heap Blocks: exact=7
+                                  Buffers: shared hit=9
+                                  ->  Bitmap Index Scan on "Opportunity_companyId_status_idx"  (cost=0.00..4.32 rows=6 width=0) (actual time=0.002..0.002 rows=15 loops=1)
+                                        Index Cond: ("companyId" = c.id)
+                                        Buffers: shared hit=2
+                      ->  Index Scan using "Application_opportunityId_status_idx" on "Application" a  (cost=0.29..2.22 rows=20 width=36) (actual time=0.002..0.017 rows=17 loops=6)
+                            Index Cond: ("opportunityId" = o.id)
+                            Buffers: shared hit=112
+                ->  Index Scan using "Interview_applicationId_scheduledAt_idx" on "Interview" it  (cost=0.28..0.34 rows=1 width=19) (actual time=0.001..0.001 rows=0 loops=100)
+                      Index Cond: ("applicationId" = a.id)
+                      Filter: (status = 'SCHEDULED'::"InterviewStatus")
+                      Buffers: shared hit=225
+  InitPlan 2 (returns $4)
+    ->  Aggregate  (cost=47.84..47.85 rows=1 width=8) (actual time=0.092..0.092 rows=1 loops=1)
+          Buffers: shared hit=29
+          ->  Hash Join  (cost=8.17..47.83 rows=4 width=0) (actual time=0.092..0.092 rows=0 loops=1)
+                Hash Cond: (it_1."companyId" = c_1.id)
+                Buffers: shared hit=29
+                ->  Seq Scan on "Internship" it_1  (cost=0.00..36.99 rows=999 width=12) (actual time=0.005..0.054 rows=999 loops=1)
+                      Buffers: shared hit=27
+                ->  Hash  (cost=8.16..8.16 rows=1 width=12) (actual time=0.004..0.004 rows=1 loops=1)
+                      Buckets: 1024  Batches: 1  Memory Usage: 9kB
+                      Buffers: shared hit=2
+                      ->  Index Scan using "Company_userId_key" on "Company" c_1  (cost=0.14..8.16 rows=1 width=12) (actual time=0.002..0.002 rows=1 loops=1)
+                            Index Cond: ("userId" = 'industry-user-001'::text)
+                            Buffers: shared hit=2
+  InitPlan 3 (returns $7)
+    ->  Aggregate  (cost=41.16..41.17 rows=1 width=8) (actual time=0.031..0.031 rows=1 loops=1)
+          Buffers: shared hit=123
+          ->  Nested Loop  (cost=4.76..41.15 rows=2 width=0) (actual time=0.008..0.031 rows=9 loops=1)
+                Buffers: shared hit=123
+                ->  Nested Loop  (cost=4.47..29.27 rows=5 width=17) (actual time=0.005..0.007 rows=6 loops=1)
+                      Buffers: shared hit=11
+                      ->  Index Scan using "Company_userId_key" on "Company" c_2  (cost=0.14..8.16 rows=1 width=12) (actual time=0.002..0.002 rows=1 loops=1)
+                            Index Cond: ("userId" = 'industry-user-001'::text)
+                            Buffers: shared hit=2
+                      ->  Bitmap Heap Scan on "Opportunity" o_1  (cost=4.32..21.05 rows=6 width=29) (actual time=0.003..0.004 rows=6 loops=1)
+                            Recheck Cond: ("companyId" = c_2.id)
+                            Heap Blocks: exact=7
+                            Buffers: shared hit=9
+                            ->  Bitmap Index Scan on "Opportunity_companyId_status_idx"  (cost=0.00..4.32 rows=6 width=0) (actual time=0.002..0.002 rows=15 loops=1)
+                                  Index Cond: ("companyId" = c_2.id)
+                                  Buffers: shared hit=2
+                ->  Index Scan using "Application_opportunityId_status_idx" on "Application" a_1  (cost=0.29..2.37 rows=1 width=17) (actual time=0.001..0.004 rows=2 loops=6)
+                      Index Cond: ("opportunityId" = o_1.id)
+                      Filter: ("createdAt" >= (CURRENT_TIMESTAMP - '7 days'::interval))
+                      Rows Removed by Filter: 15
+                      Buffers: shared hit=112
+Planning:
+  Buffers: shared hit=595
+Planning Time: 1.010 ms
+Execution Time: 0.404 ms
+
+==================== RUN 2: 0.418 ms ====================
+Result  (cost=159.17..159.18 rows=1 width=24) (actual time=0.365..0.368 rows=1 loops=1)
+  Buffers: shared hit=500
+  InitPlan 1 (returns $3)
+    ->  Aggregate  (cost=70.14..70.15 rows=1 width=8) (actual time=0.231..0.231 rows=1 loops=1)
+          Buffers: shared hit=348
+          ->  Nested Loop  (cost=5.04..70.09 rows=17 width=0) (actual time=0.024..0.228 rows=25 loops=1)
+                Buffers: shared hit=348
+                ->  Nested Loop  (cost=4.76..41.35 rows=83 width=19) (actual time=0.011..0.116 rows=100 loops=1)
+                      Buffers: shared hit=123
+                      ->  Nested Loop  (cost=4.47..29.27 rows=5 width=17) (actual time=0.008..0.013 rows=6 loops=1)
+                            Buffers: shared hit=11
+                            ->  Index Scan using "Company_userId_key" on "Company" c  (cost=0.14..8.16 rows=1 width=12) (actual time=0.003..0.003 rows=1 loops=1)
+                                  Index Cond: ("userId" = 'industry-user-001'::text)
+                                  Buffers: shared hit=2
+                            ->  Bitmap Heap Scan on "Opportunity" o  (cost=4.32..21.05 rows=6 width=29) (actual time=0.004..0.008 rows=6 loops=1)
+                                  Recheck Cond: ("companyId" = c.id)
+                                  Heap Blocks: exact=7
+                                  Buffers: shared hit=9
+                                  ->  Bitmap Index Scan on "Opportunity_companyId_status_idx"  (cost=0.00..4.32 rows=6 width=0) (actual time=0.002..0.002 rows=15 loops=1)
+                                        Index Cond: ("companyId" = c.id)
+                                        Buffers: shared hit=2
+                      ->  Index Scan using "Application_opportunityId_status_idx" on "Application" a  (cost=0.29..2.22 rows=20 width=36) (actual time=0.002..0.016 rows=17 loops=6)
+                            Index Cond: ("opportunityId" = o.id)
+                            Buffers: shared hit=112
+                ->  Index Scan using "Interview_applicationId_scheduledAt_idx" on "Interview" it  (cost=0.28..0.34 rows=1 width=19) (actual time=0.001..0.001 rows=0 loops=100)
+                      Index Cond: ("applicationId" = a.id)
+                      Filter: (status = 'SCHEDULED'::"InterviewStatus")
+                      Buffers: shared hit=225
+  InitPlan 2 (returns $4)
+    ->  Aggregate  (cost=47.84..47.85 rows=1 width=8) (actual time=0.096..0.096 rows=1 loops=1)
+          Buffers: shared hit=29
+          ->  Hash Join  (cost=8.17..47.83 rows=4 width=0) (actual time=0.095..0.096 rows=0 loops=1)
+                Hash Cond: (it_1."companyId" = c_1.id)
+                Buffers: shared hit=29
+                ->  Seq Scan on "Internship" it_1  (cost=0.00..36.99 rows=999 width=12) (actual time=0.003..0.054 rows=999 loops=1)
+                      Buffers: shared hit=27
+                ->  Hash  (cost=8.16..8.16 rows=1 width=12) (actual time=0.004..0.004 rows=1 loops=1)
+                      Buckets: 1024  Batches: 1  Memory Usage: 9kB
+                      Buffers: shared hit=2
+                      ->  Index Scan using "Company_userId_key" on "Company" c_1  (cost=0.14..8.16 rows=1 width=12) (actual time=0.002..0.002 rows=1 loops=1)
+                            Index Cond: ("userId" = 'industry-user-001'::text)
+                            Buffers: shared hit=2
+  InitPlan 3 (returns $7)
+    ->  Aggregate  (cost=41.16..41.17 rows=1 width=8) (actual time=0.037..0.037 rows=1 loops=1)
+          Buffers: shared hit=123
+          ->  Nested Loop  (cost=4.76..41.15 rows=2 width=0) (actual time=0.010..0.036 rows=9 loops=1)
+                Buffers: shared hit=123
+                ->  Nested Loop  (cost=4.47..29.27 rows=5 width=17) (actual time=0.006..0.007 rows=6 loops=1)
+                      Buffers: shared hit=11
+                      ->  Index Scan using "Company_userId_key" on "Company" c_2  (cost=0.14..8.16 rows=1 width=12) (actual time=0.002..0.002 rows=1 loops=1)
+                            Index Cond: ("userId" = 'industry-user-001'::text)
+                            Buffers: shared hit=2
+                      ->  Bitmap Heap Scan on "Opportunity" o_1  (cost=4.32..21.05 rows=6 width=29) (actual time=0.003..0.004 rows=6 loops=1)
+                            Recheck Cond: ("companyId" = c_2.id)
+                            Heap Blocks: exact=7
+                            Buffers: shared hit=9
+                            ->  Bitmap Index Scan on "Opportunity_companyId_status_idx"  (cost=0.00..4.32 rows=6 width=0) (actual time=0.002..0.002 rows=15 loops=1)
+                                  Index Cond: ("companyId" = c_2.id)
+                                  Buffers: shared hit=2
+                ->  Index Scan using "Application_opportunityId_status_idx" on "Application" a_1  (cost=0.29..2.37 rows=1 width=17) (actual time=0.002..0.005 rows=2 loops=6)
+                      Index Cond: ("opportunityId" = o_1.id)
+                      Filter: ("createdAt" >= (CURRENT_TIMESTAMP - '7 days'::interval))
+                      Rows Removed by Filter: 15
+                      Buffers: shared hit=112
+Planning:
+  Buffers: shared hit=595
+Planning Time: 1.201 ms
+Execution Time: 0.418 ms
+
+==================== RUN 3: 0.359 ms ====================
+Result  (cost=159.17..159.18 rows=1 width=24) (actual time=0.306..0.308 rows=1 loops=1)
+  Buffers: shared hit=500
+  InitPlan 1 (returns $3)
+    ->  Aggregate  (cost=70.14..70.15 rows=1 width=8) (actual time=0.193..0.193 rows=1 loops=1)
+          Buffers: shared hit=348
+          ->  Nested Loop  (cost=5.04..70.09 rows=17 width=0) (actual time=0.021..0.190 rows=25 loops=1)
+                Buffers: shared hit=348
+                ->  Nested Loop  (cost=4.76..41.35 rows=83 width=19) (actual time=0.010..0.095 rows=100 loops=1)
+                      Buffers: shared hit=123
+                      ->  Nested Loop  (cost=4.47..29.27 rows=5 width=17) (actual time=0.007..0.012 rows=6 loops=1)
+                            Buffers: shared hit=11
+                            ->  Index Scan using "Company_userId_key" on "Company" c  (cost=0.14..8.16 rows=1 width=12) (actual time=0.003..0.003 rows=1 loops=1)
+                                  Index Cond: ("userId" = 'industry-user-001'::text)
+                                  Buffers: shared hit=2
+                            ->  Bitmap Heap Scan on "Opportunity" o  (cost=4.32..21.05 rows=6 width=29) (actual time=0.004..0.008 rows=6 loops=1)
+                                  Recheck Cond: ("companyId" = c.id)
+                                  Heap Blocks: exact=7
+                                  Buffers: shared hit=9
+                                  ->  Bitmap Index Scan on "Opportunity_companyId_status_idx"  (cost=0.00..4.32 rows=6 width=0) (actual time=0.002..0.002 rows=15 loops=1)
+                                        Index Cond: ("companyId" = c.id)
+                                        Buffers: shared hit=2
+                      ->  Index Scan using "Application_opportunityId_status_idx" on "Application" a  (cost=0.29..2.22 rows=20 width=36) (actual time=0.002..0.013 rows=17 loops=6)
+                            Index Cond: ("opportunityId" = o.id)
+                            Buffers: shared hit=112
+                ->  Index Scan using "Interview_applicationId_scheduledAt_idx" on "Interview" it  (cost=0.28..0.34 rows=1 width=19) (actual time=0.001..0.001 rows=0 loops=100)
+                      Index Cond: ("applicationId" = a.id)
+                      Filter: (status = 'SCHEDULED'::"InterviewStatus")
+                      Buffers: shared hit=225
+  InitPlan 2 (returns $4)
+    ->  Aggregate  (cost=47.84..47.85 rows=1 width=8) (actual time=0.081..0.082 rows=1 loops=1)
+          Buffers: shared hit=29
+          ->  Hash Join  (cost=8.17..47.83 rows=4 width=0) (actual time=0.081..0.081 rows=0 loops=1)
+                Hash Cond: (it_1."companyId" = c_1.id)
+                Buffers: shared hit=29
+                ->  Seq Scan on "Internship" it_1  (cost=0.00..36.99 rows=999 width=12) (actual time=0.002..0.046 rows=999 loops=1)
+                      Buffers: shared hit=27
+                ->  Hash  (cost=8.16..8.16 rows=1 width=12) (actual time=0.003..0.003 rows=1 loops=1)
+                      Buckets: 1024  Batches: 1  Memory Usage: 9kB
+                      Buffers: shared hit=2
+                      ->  Index Scan using "Company_userId_key" on "Company" c_1  (cost=0.14..8.16 rows=1 width=12) (actual time=0.002..0.002 rows=1 loops=1)
+                            Index Cond: ("userId" = 'industry-user-001'::text)
+                            Buffers: shared hit=2
+  InitPlan 3 (returns $7)
+    ->  Aggregate  (cost=41.16..41.17 rows=1 width=8) (actual time=0.030..0.030 rows=1 loops=1)
+          Buffers: shared hit=123
+          ->  Nested Loop  (cost=4.76..41.15 rows=2 width=0) (actual time=0.008..0.030 rows=9 loops=1)
+                Buffers: shared hit=123
+                ->  Nested Loop  (cost=4.47..29.27 rows=5 width=17) (actual time=0.005..0.006 rows=6 loops=1)
+                      Buffers: shared hit=11
+                      ->  Index Scan using "Company_userId_key" on "Company" c_2  (cost=0.14..8.16 rows=1 width=12) (actual time=0.002..0.002 rows=1 loops=1)
+                            Index Cond: ("userId" = 'industry-user-001'::text)
+                            Buffers: shared hit=2
+                      ->  Bitmap Heap Scan on "Opportunity" o_1  (cost=4.32..21.05 rows=6 width=29) (actual time=0.002..0.003 rows=6 loops=1)
+                            Recheck Cond: ("companyId" = c_2.id)
+                            Heap Blocks: exact=7
+                            Buffers: shared hit=9
+                            ->  Bitmap Index Scan on "Opportunity_companyId_status_idx"  (cost=0.00..4.32 rows=6 width=0) (actual time=0.002..0.002 rows=15 loops=1)
+                                  Index Cond: ("companyId" = c_2.id)
+                                  Buffers: shared hit=2
+                ->  Index Scan using "Application_opportunityId_status_idx" on "Application" a_1  (cost=0.29..2.37 rows=1 width=17) (actual time=0.001..0.004 rows=2 loops=6)
+                      Index Cond: ("opportunityId" = o_1.id)
+                      Filter: ("createdAt" >= (CURRENT_TIMESTAMP - '7 days'::interval))
+                      Rows Removed by Filter: 15
+                      Buffers: shared hit=112
+Planning:
+  Buffers: shared hit=595
+Planning Time: 0.947 ms
+Execution Time: 0.359 ms

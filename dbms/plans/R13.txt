@@ -1,0 +1,117 @@
+Query: R13 (READ)
+Database: skillbridge_ap_cp4
+PostgreSQL: PostgreSQL 16.15 (Homebrew) on aarch64-apple-darwin27.0.0, compiled by Apple clang version 21.0.0 (clang-2100.3.34.2), 64-bit
+Runs: 3
+Parameters: ('assessment-001',)
+
+SQL:
+SELECT a."id" AS "assessmentId",a."title",s."name" AS "skillName",q."id" AS "questionId",q."question",q."correctAnswer",o."optionPosition",o."optionText"
+FROM "Assessment" a JOIN "Skill" s ON s."id"=a."skillId"
+JOIN "AssessmentQuestion" q ON q."assessmentId"=a."id"
+LEFT JOIN "AssessmentQuestionOption" o ON o."questionId"=q."id"
+WHERE a."id"='assessment-001' ORDER BY q."id",o."optionPosition";
+
+==================== RUN 1: 0.195 ms ====================
+Sort  (cost=59.76..59.81 rows=20 width=97) (actual time=0.165..0.167 rows=20 loops=1)
+  Sort Key: q.id, o."optionPosition"
+  Sort Method: quicksort  Memory: 27kB
+  Buffers: shared hit=31
+  ->  Nested Loop  (cost=11.56..59.33 rows=20 width=97) (actual time=0.026..0.150 rows=20 loops=1)
+        Buffers: shared hit=25
+        ->  Hash Join  (cost=3.26..6.54 rows=1 width=38) (actual time=0.016..0.021 rows=1 loops=1)
+              Hash Cond: (s.id = a."skillId")
+              Buffers: shared hit=4
+              ->  Seq Scan on "Skill" s  (cost=0.00..3.00 rows=100 width=20) (actual time=0.002..0.005 rows=100 loops=1)
+                    Buffers: shared hit=2
+              ->  Hash  (cost=3.25..3.25 rows=1 width=38) (actual time=0.009..0.009 rows=1 loops=1)
+                    Buckets: 1024  Batches: 1  Memory Usage: 9kB
+                    Buffers: shared hit=2
+                    ->  Seq Scan on "Assessment" a  (cost=0.00..3.25 rows=1 width=38) (actual time=0.003..0.006 rows=1 loops=1)
+                          Filter: (id = 'assessment-001'::text)
+                          Rows Removed by Filter: 99
+                          Buffers: shared hit=2
+        ->  Hash Right Join  (cost=8.30..52.59 rows=20 width=74) (actual time=0.009..0.127 rows=20 loops=1)
+              Hash Cond: (o."questionId" = q.id)
+              Buffers: shared hit=21
+              ->  Seq Scan on "AssessmentQuestionOption" o  (cost=0.00..39.00 rows=2000 width=43) (actual time=0.001..0.061 rows=2000 loops=1)
+                    Buffers: shared hit=19
+              ->  Hash  (cost=8.24..8.24 rows=5 width=45) (actual time=0.004..0.004 rows=5 loops=1)
+                    Buckets: 1024  Batches: 1  Memory Usage: 9kB
+                    Buffers: shared hit=2
+                    ->  Index Scan using "AssessmentQuestion_assessmentId_idx" on "AssessmentQuestion" q  (cost=0.15..8.24 rows=5 width=45) (actual time=0.003..0.003 rows=5 loops=1)
+                          Index Cond: ("assessmentId" = 'assessment-001'::text)
+                          Buffers: shared hit=2
+Planning:
+  Buffers: shared hit=282
+Planning Time: 0.631 ms
+Execution Time: 0.195 ms
+
+==================== RUN 2: 0.187 ms ====================
+Sort  (cost=59.76..59.81 rows=20 width=97) (actual time=0.158..0.160 rows=20 loops=1)
+  Sort Key: q.id, o."optionPosition"
+  Sort Method: quicksort  Memory: 27kB
+  Buffers: shared hit=31
+  ->  Nested Loop  (cost=11.56..59.33 rows=20 width=97) (actual time=0.020..0.146 rows=20 loops=1)
+        Buffers: shared hit=25
+        ->  Hash Join  (cost=3.26..6.54 rows=1 width=38) (actual time=0.012..0.017 rows=1 loops=1)
+              Hash Cond: (s.id = a."skillId")
+              Buffers: shared hit=4
+              ->  Seq Scan on "Skill" s  (cost=0.00..3.00 rows=100 width=20) (actual time=0.001..0.004 rows=100 loops=1)
+                    Buffers: shared hit=2
+              ->  Hash  (cost=3.25..3.25 rows=1 width=38) (actual time=0.007..0.007 rows=1 loops=1)
+                    Buckets: 1024  Batches: 1  Memory Usage: 9kB
+                    Buffers: shared hit=2
+                    ->  Seq Scan on "Assessment" a  (cost=0.00..3.25 rows=1 width=38) (actual time=0.002..0.004 rows=1 loops=1)
+                          Filter: (id = 'assessment-001'::text)
+                          Rows Removed by Filter: 99
+                          Buffers: shared hit=2
+        ->  Hash Right Join  (cost=8.30..52.59 rows=20 width=74) (actual time=0.008..0.127 rows=20 loops=1)
+              Hash Cond: (o."questionId" = q.id)
+              Buffers: shared hit=21
+              ->  Seq Scan on "AssessmentQuestionOption" o  (cost=0.00..39.00 rows=2000 width=43) (actual time=0.001..0.058 rows=2000 loops=1)
+                    Buffers: shared hit=19
+              ->  Hash  (cost=8.24..8.24 rows=5 width=45) (actual time=0.004..0.004 rows=5 loops=1)
+                    Buckets: 1024  Batches: 1  Memory Usage: 9kB
+                    Buffers: shared hit=2
+                    ->  Index Scan using "AssessmentQuestion_assessmentId_idx" on "AssessmentQuestion" q  (cost=0.15..8.24 rows=5 width=45) (actual time=0.002..0.002 rows=5 loops=1)
+                          Index Cond: ("assessmentId" = 'assessment-001'::text)
+                          Buffers: shared hit=2
+Planning:
+  Buffers: shared hit=282
+Planning Time: 0.490 ms
+Execution Time: 0.187 ms
+
+==================== RUN 3: 0.168 ms ====================
+Sort  (cost=59.76..59.81 rows=20 width=97) (actual time=0.145..0.146 rows=20 loops=1)
+  Sort Key: q.id, o."optionPosition"
+  Sort Method: quicksort  Memory: 27kB
+  Buffers: shared hit=31
+  ->  Nested Loop  (cost=11.56..59.33 rows=20 width=97) (actual time=0.022..0.132 rows=20 loops=1)
+        Buffers: shared hit=25
+        ->  Hash Join  (cost=3.26..6.54 rows=1 width=38) (actual time=0.014..0.019 rows=1 loops=1)
+              Hash Cond: (s.id = a."skillId")
+              Buffers: shared hit=4
+              ->  Seq Scan on "Skill" s  (cost=0.00..3.00 rows=100 width=20) (actual time=0.001..0.004 rows=100 loops=1)
+                    Buffers: shared hit=2
+              ->  Hash  (cost=3.25..3.25 rows=1 width=38) (actual time=0.010..0.010 rows=1 loops=1)
+                    Buckets: 1024  Batches: 1  Memory Usage: 9kB
+                    Buffers: shared hit=2
+                    ->  Seq Scan on "Assessment" a  (cost=0.00..3.25 rows=1 width=38) (actual time=0.002..0.004 rows=1 loops=1)
+                          Filter: (id = 'assessment-001'::text)
+                          Rows Removed by Filter: 99
+                          Buffers: shared hit=2
+        ->  Hash Right Join  (cost=8.30..52.59 rows=20 width=74) (actual time=0.007..0.113 rows=20 loops=1)
+              Hash Cond: (o."questionId" = q.id)
+              Buffers: shared hit=21
+              ->  Seq Scan on "AssessmentQuestionOption" o  (cost=0.00..39.00 rows=2000 width=43) (actual time=0.001..0.050 rows=2000 loops=1)
+                    Buffers: shared hit=19
+              ->  Hash  (cost=8.24..8.24 rows=5 width=45) (actual time=0.003..0.004 rows=5 loops=1)
+                    Buckets: 1024  Batches: 1  Memory Usage: 9kB
+                    Buffers: shared hit=2
+                    ->  Index Scan using "AssessmentQuestion_assessmentId_idx" on "AssessmentQuestion" q  (cost=0.15..8.24 rows=5 width=45) (actual time=0.002..0.002 rows=5 loops=1)
+                          Index Cond: ("assessmentId" = 'assessment-001'::text)
+                          Buffers: shared hit=2
+Planning:
+  Buffers: shared hit=282
+Planning Time: 0.464 ms
+Execution Time: 0.168 ms

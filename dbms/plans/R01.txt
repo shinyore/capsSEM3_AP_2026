@@ -1,0 +1,35 @@
+Query: R1 (READ)
+Database: skillbridge_ap_cp4
+PostgreSQL: PostgreSQL 16.15 (Homebrew) on aarch64-apple-darwin27.0.0, compiled by Apple clang version 21.0.0 (clang-2100.3.34.2), 64-bit
+Runs: 3
+Parameters: ('student1@example.test',)
+
+SQL:
+SELECT "id", "email" FROM "User" WHERE "email" = 'student1@example.test';
+
+==================== RUN 1: 0.025 ms ====================
+Index Scan using "User_email_key" on "User"  (cost=0.28..8.30 rows=1 width=42) (actual time=0.010..0.011 rows=1 loops=1)
+  Index Cond: (email = 'student1@example.test'::text)
+  Buffers: shared hit=3
+Planning:
+  Buffers: shared hit=106
+Planning Time: 0.250 ms
+Execution Time: 0.025 ms
+
+==================== RUN 2: 0.024 ms ====================
+Index Scan using "User_email_key" on "User"  (cost=0.28..8.30 rows=1 width=42) (actual time=0.009..0.010 rows=1 loops=1)
+  Index Cond: (email = 'student1@example.test'::text)
+  Buffers: shared hit=3
+Planning:
+  Buffers: shared hit=106
+Planning Time: 0.207 ms
+Execution Time: 0.024 ms
+
+==================== RUN 3: 0.021 ms ====================
+Index Scan using "User_email_key" on "User"  (cost=0.28..8.30 rows=1 width=42) (actual time=0.008..0.009 rows=1 loops=1)
+  Index Cond: (email = 'student1@example.test'::text)
+  Buffers: shared hit=3
+Planning:
+  Buffers: shared hit=106
+Planning Time: 0.183 ms
+Execution Time: 0.021 ms

@@ -1,0 +1,76 @@
+Query: R6 (READ)
+Database: skillbridge_ap_cp4
+PostgreSQL: PostgreSQL 16.15 (Homebrew) on aarch64-apple-darwin27.0.0, compiled by Apple clang version 21.0.0 (clang-2100.3.34.2), 64-bit
+Runs: 3
+Parameters: ('student-user-00001',)
+
+SQL:
+SELECT sp.*, u."fullName", u."email", i."name" AS "institutionName"
+FROM "StudentProfile" sp JOIN "User" u ON u."id" = sp."userId"
+LEFT JOIN "Institution" i ON i."id" = sp."institutionId" WHERE sp."userId" = 'student-user-00001';
+
+==================== RUN 1: 0.056 ms ====================
+Nested Loop  (cost=8.60..20.26 rows=1 width=323) (actual time=0.025..0.032 rows=1 loops=1)
+  Buffers: shared hit=11
+  ->  Hash Right Join  (cost=8.31..11.95 rows=1 width=286) (actual time=0.016..0.021 rows=1 loops=1)
+        Hash Cond: (i.id = sp."institutionId")
+        Buffers: shared hit=6
+        ->  Seq Scan on "Institution" i  (cost=0.00..3.50 rows=50 width=28) (actual time=0.003..0.005 rows=50 loops=1)
+              Buffers: shared hit=3
+        ->  Hash  (cost=8.30..8.30 rows=1 width=274) (actual time=0.009..0.009 rows=1 loops=1)
+              Buckets: 1024  Batches: 1  Memory Usage: 9kB
+              Buffers: shared hit=3
+              ->  Index Scan using "StudentProfile_userId_key" on "StudentProfile" sp  (cost=0.28..8.30 rows=1 width=274) (actual time=0.006..0.006 rows=1 loops=1)
+                    Index Cond: ("userId" = 'student-user-00001'::text)
+                    Buffers: shared hit=3
+  ->  Index Scan using "User_pkey" on "User" u  (cost=0.28..8.30 rows=1 width=55) (actual time=0.008..0.009 rows=1 loops=1)
+        Index Cond: (id = 'student-user-00001'::text)
+        Buffers: shared hit=5
+Planning:
+  Buffers: shared hit=431
+Planning Time: 0.499 ms
+Execution Time: 0.056 ms
+
+==================== RUN 2: 0.045 ms ====================
+Nested Loop  (cost=8.60..20.26 rows=1 width=323) (actual time=0.018..0.023 rows=1 loops=1)
+  Buffers: shared hit=9
+  ->  Hash Right Join  (cost=8.31..11.95 rows=1 width=286) (actual time=0.013..0.018 rows=1 loops=1)
+        Hash Cond: (i.id = sp."institutionId")
+        Buffers: shared hit=6
+        ->  Seq Scan on "Institution" i  (cost=0.00..3.50 rows=50 width=28) (actual time=0.002..0.004 rows=50 loops=1)
+              Buffers: shared hit=3
+        ->  Hash  (cost=8.30..8.30 rows=1 width=274) (actual time=0.007..0.007 rows=1 loops=1)
+              Buckets: 1024  Batches: 1  Memory Usage: 9kB
+              Buffers: shared hit=3
+              ->  Index Scan using "StudentProfile_userId_key" on "StudentProfile" sp  (cost=0.28..8.30 rows=1 width=274) (actual time=0.005..0.005 rows=1 loops=1)
+                    Index Cond: ("userId" = 'student-user-00001'::text)
+                    Buffers: shared hit=3
+  ->  Index Scan using "User_pkey" on "User" u  (cost=0.28..8.30 rows=1 width=55) (actual time=0.004..0.004 rows=1 loops=1)
+        Index Cond: (id = 'student-user-00001'::text)
+        Buffers: shared hit=3
+Planning:
+  Buffers: shared hit=430
+Planning Time: 0.435 ms
+Execution Time: 0.045 ms
+
+==================== RUN 3: 0.061 ms ====================
+Nested Loop  (cost=8.60..20.26 rows=1 width=323) (actual time=0.022..0.037 rows=1 loops=1)
+  Buffers: shared hit=9
+  ->  Hash Right Join  (cost=8.31..11.95 rows=1 width=286) (actual time=0.015..0.029 rows=1 loops=1)
+        Hash Cond: (i.id = sp."institutionId")
+        Buffers: shared hit=6
+        ->  Seq Scan on "Institution" i  (cost=0.00..3.50 rows=50 width=28) (actual time=0.004..0.006 rows=50 loops=1)
+              Buffers: shared hit=3
+        ->  Hash  (cost=8.30..8.30 rows=1 width=274) (actual time=0.007..0.008 rows=1 loops=1)
+              Buckets: 1024  Batches: 1  Memory Usage: 9kB
+              Buffers: shared hit=3
+              ->  Index Scan using "StudentProfile_userId_key" on "StudentProfile" sp  (cost=0.28..8.30 rows=1 width=274) (actual time=0.005..0.005 rows=1 loops=1)
+                    Index Cond: ("userId" = 'student-user-00001'::text)
+                    Buffers: shared hit=3
+  ->  Index Scan using "User_pkey" on "User" u  (cost=0.28..8.30 rows=1 width=55) (actual time=0.006..0.006 rows=1 loops=1)
+        Index Cond: (id = 'student-user-00001'::text)
+        Buffers: shared hit=3
+Planning:
+  Buffers: shared hit=430
+Planning Time: 0.479 ms
+Execution Time: 0.061 ms

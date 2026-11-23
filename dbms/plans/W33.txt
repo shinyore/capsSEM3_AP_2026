@@ -1,0 +1,89 @@
+Query: W33 (WRITE)
+Database: skillbridge_ap_cp4
+PostgreSQL: PostgreSQL 16.15 (Homebrew) on aarch64-apple-darwin27.0.0, compiled by Apple clang version 21.0.0 (clang-2100.3.34.2), 64-bit
+Runs: 3
+Parameters: ('bench-created-internship', 'application-000020', 'Benchmark internship', '2027-01-01 00:00:00', '2027-04-01 00:00:00', 'Synthetic notes')
+
+SQL:
+INSERT INTO "Internship" ("id","applicationId","studentProfileId","companyId","institutionId","title","startDate","endDate","notes","updatedAt")
+SELECT 'bench-created-internship',a."id",a."studentProfileId",o."companyId",sp."institutionId",'Benchmark internship','2027-01-01 00:00:00','2027-04-01 00:00:00','Synthetic notes',CURRENT_TIMESTAMP
+FROM "Application" a JOIN "Opportunity" o ON o."id"=a."opportunityId" JOIN "StudentProfile" sp ON sp."id"=a."studentProfileId"
+WHERE a."id"='application-000020' AND a."status"='SELECTED';
+
+==================== RUN 1: 0.470 ms ====================
+Insert on "Internship"  (cost=0.85..24.94 rows=0 width=0) (actual time=0.116..0.117 rows=0 loops=1)
+  Buffers: shared hit=75
+  ->  Nested Loop  (cost=0.85..24.94 rows=1 width=201) (actual time=0.014..0.015 rows=1 loops=1)
+        Buffers: shared hit=9
+        ->  Nested Loop  (cost=0.56..16.62 rows=1 width=53) (actual time=0.008..0.009 rows=1 loops=1)
+              Buffers: shared hit=6
+              ->  Index Scan using "Application_pkey" on "Application" a  (cost=0.29..8.31 rows=1 width=58) (actual time=0.007..0.007 rows=1 loops=1)
+                    Index Cond: (id = 'application-000020'::text)
+                    Filter: (status = 'SELECTED'::"ApplicationStatus")
+                    Buffers: shared hit=3
+              ->  Index Scan using "Opportunity_pkey" on "Opportunity" o  (cost=0.28..8.29 rows=1 width=29) (actual time=0.001..0.001 rows=1 loops=1)
+                    Index Cond: (id = a."opportunityId")
+                    Buffers: shared hit=3
+        ->  Index Scan using "StudentProfile_pkey" on "StudentProfile" sp  (cost=0.28..8.30 rows=1 width=38) (actual time=0.002..0.002 rows=1 loops=1)
+              Index Cond: (id = a."studentProfileId")
+              Buffers: shared hit=3
+Planning:
+  Buffers: shared hit=449
+Planning Time: 0.692 ms
+Trigger for constraint Internship_applicationId_fkey: time=0.064 calls=1
+Trigger for constraint Internship_studentProfileId_fkey: time=0.020 calls=1
+Trigger for constraint Internship_companyId_fkey: time=0.128 calls=1
+Trigger for constraint Internship_institutionId_fkey: time=0.119 calls=1
+Execution Time: 0.470 ms
+
+==================== RUN 2: 0.440 ms ====================
+Insert on "Internship"  (cost=0.85..24.94 rows=0 width=0) (actual time=0.096..0.097 rows=0 loops=1)
+  Buffers: shared hit=77
+  ->  Nested Loop  (cost=0.85..24.94 rows=1 width=201) (actual time=0.014..0.015 rows=1 loops=1)
+        Buffers: shared hit=9
+        ->  Nested Loop  (cost=0.56..16.62 rows=1 width=53) (actual time=0.008..0.009 rows=1 loops=1)
+              Buffers: shared hit=6
+              ->  Index Scan using "Application_pkey" on "Application" a  (cost=0.29..8.31 rows=1 width=58) (actual time=0.007..0.007 rows=1 loops=1)
+                    Index Cond: (id = 'application-000020'::text)
+                    Filter: (status = 'SELECTED'::"ApplicationStatus")
+                    Buffers: shared hit=3
+              ->  Index Scan using "Opportunity_pkey" on "Opportunity" o  (cost=0.28..8.29 rows=1 width=29) (actual time=0.001..0.001 rows=1 loops=1)
+                    Index Cond: (id = a."opportunityId")
+                    Buffers: shared hit=3
+        ->  Index Scan using "StudentProfile_pkey" on "StudentProfile" sp  (cost=0.28..8.30 rows=1 width=38) (actual time=0.003..0.003 rows=1 loops=1)
+              Index Cond: (id = a."studentProfileId")
+              Buffers: shared hit=3
+Planning:
+  Buffers: shared hit=449
+Planning Time: 0.692 ms
+Trigger for constraint Internship_applicationId_fkey: time=0.060 calls=1
+Trigger for constraint Internship_studentProfileId_fkey: time=0.021 calls=1
+Trigger for constraint Internship_companyId_fkey: time=0.126 calls=1
+Trigger for constraint Internship_institutionId_fkey: time=0.115 calls=1
+Execution Time: 0.440 ms
+
+==================== RUN 3: 0.473 ms ====================
+Insert on "Internship"  (cost=0.85..24.94 rows=0 width=0) (actual time=0.103..0.105 rows=0 loops=1)
+  Buffers: shared hit=77
+  ->  Nested Loop  (cost=0.85..24.94 rows=1 width=201) (actual time=0.013..0.013 rows=1 loops=1)
+        Buffers: shared hit=9
+        ->  Nested Loop  (cost=0.56..16.62 rows=1 width=53) (actual time=0.008..0.008 rows=1 loops=1)
+              Buffers: shared hit=6
+              ->  Index Scan using "Application_pkey" on "Application" a  (cost=0.29..8.31 rows=1 width=58) (actual time=0.006..0.006 rows=1 loops=1)
+                    Index Cond: (id = 'application-000020'::text)
+                    Filter: (status = 'SELECTED'::"ApplicationStatus")
+                    Buffers: shared hit=3
+              ->  Index Scan using "Opportunity_pkey" on "Opportunity" o  (cost=0.28..8.29 rows=1 width=29) (actual time=0.001..0.001 rows=1 loops=1)
+                    Index Cond: (id = a."opportunityId")
+                    Buffers: shared hit=3
+        ->  Index Scan using "StudentProfile_pkey" on "StudentProfile" sp  (cost=0.28..8.30 rows=1 width=38) (actual time=0.002..0.002 rows=1 loops=1)
+              Index Cond: (id = a."studentProfileId")
+              Buffers: shared hit=3
+Planning:
+  Buffers: shared hit=449
+Planning Time: 0.747 ms
+Trigger for constraint Internship_applicationId_fkey: time=0.049 calls=1
+Trigger for constraint Internship_studentProfileId_fkey: time=0.017 calls=1
+Trigger for constraint Internship_companyId_fkey: time=0.145 calls=1
+Trigger for constraint Internship_institutionId_fkey: time=0.138 calls=1
+Execution Time: 0.473 ms

@@ -1,0 +1,44 @@
+Query: W8 (WRITE)
+Database: skillbridge_ap_cp4
+PostgreSQL: PostgreSQL 16.15 (Homebrew) on aarch64-apple-darwin27.0.0, compiled by Apple clang version 21.0.0 (clang-2100.3.34.2), 64-bit
+Runs: 3
+Parameters: ('industry-user-001', 'Updated Company', 'updated@example.test', 'https://example.test', 'Office', 'Updated', '+15550000200')
+
+SQL:
+UPDATE "Company" SET "name"=COALESCE('Updated Company',"name"), "officialEmail"=COALESCE('updated@example.test',"officialEmail"), "website"=COALESCE('https://example.test',"website"), "address"=COALESCE('Office',"address"), "description"=COALESCE('Updated',"description"), "contactInfo"=COALESCE('+15550000200',"contactInfo"), "updatedAt"=CURRENT_TIMESTAMP WHERE "userId"='industry-user-001';
+
+==================== RUN 1: 0.112 ms ====================
+Update on "Company"  (cost=0.00..7.51 rows=0 width=0) (actual time=0.075..0.076 rows=0 loops=1)
+  Buffers: shared hit=26 dirtied=2
+  ->  Seq Scan on "Company"  (cost=0.00..7.51 rows=1 width=206) (actual time=0.010..0.018 rows=1 loops=1)
+        Filter: ("userId" = 'industry-user-001'::text)
+        Rows Removed by Filter: 199
+        Buffers: shared hit=5
+Planning:
+  Buffers: shared hit=109
+Planning Time: 0.178 ms
+Execution Time: 0.112 ms
+
+==================== RUN 2: 0.103 ms ====================
+Update on "Company"  (cost=0.00..7.51 rows=0 width=0) (actual time=0.070..0.071 rows=0 loops=1)
+  Buffers: shared hit=29
+  ->  Seq Scan on "Company"  (cost=0.00..7.51 rows=1 width=206) (actual time=0.011..0.020 rows=1 loops=1)
+        Filter: ("userId" = 'industry-user-001'::text)
+        Rows Removed by Filter: 199
+        Buffers: shared hit=5
+Planning:
+  Buffers: shared hit=109
+Planning Time: 0.167 ms
+Execution Time: 0.103 ms
+
+==================== RUN 3: 0.103 ms ====================
+Update on "Company"  (cost=0.00..7.51 rows=0 width=0) (actual time=0.071..0.072 rows=0 loops=1)
+  Buffers: shared hit=29
+  ->  Seq Scan on "Company"  (cost=0.00..7.51 rows=1 width=206) (actual time=0.013..0.021 rows=1 loops=1)
+        Filter: ("userId" = 'industry-user-001'::text)
+        Rows Removed by Filter: 199
+        Buffers: shared hit=5
+Planning:
+  Buffers: shared hit=109
+Planning Time: 0.169 ms
+Execution Time: 0.103 ms

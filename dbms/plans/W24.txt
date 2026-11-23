@@ -1,0 +1,35 @@
+Query: W24 (WRITE)
+Database: skillbridge_ap_cp4
+PostgreSQL: PostgreSQL 16.15 (Homebrew) on aarch64-apple-darwin27.0.0, compiled by Apple clang version 21.0.0 (clang-2100.3.34.2), 64-bit
+Runs: 3
+Parameters: ('bench-created-application', 'student-profile-00001', 'opportunity-1100', 'Synthetic application')
+
+SQL:
+INSERT INTO "Application" ("id","studentProfileId","opportunityId","coverLetter","status","updatedAt") VALUES ('bench-created-application','student-profile-00001','opportunity-1100','Synthetic application','SUBMITTED',CURRENT_TIMESTAMP);
+
+==================== RUN 1: 0.578 ms ====================
+Insert on "Application"  (cost=0.00..0.03 rows=0 width=0) (actual time=0.153..0.153 rows=0 loops=1)
+  Buffers: shared hit=100
+  ->  Result  (cost=0.00..0.03 rows=1 width=180) (actual time=0.005..0.005 rows=1 loops=1)
+Planning Time: 0.027 ms
+Trigger for constraint Application_studentProfileId_fkey: time=0.252 calls=1
+Trigger for constraint Application_opportunityId_fkey: time=0.156 calls=1
+Execution Time: 0.578 ms
+
+==================== RUN 2: 0.532 ms ====================
+Insert on "Application"  (cost=0.00..0.03 rows=0 width=0) (actual time=0.124..0.125 rows=0 loops=1)
+  Buffers: shared hit=101
+  ->  Result  (cost=0.00..0.03 rows=1 width=180) (actual time=0.006..0.006 rows=1 loops=1)
+Planning Time: 0.029 ms
+Trigger for constraint Application_studentProfileId_fkey: time=0.240 calls=1
+Trigger for constraint Application_opportunityId_fkey: time=0.150 calls=1
+Execution Time: 0.532 ms
+
+==================== RUN 3: 0.536 ms ====================
+Insert on "Application"  (cost=0.00..0.03 rows=0 width=0) (actual time=0.120..0.121 rows=0 loops=1)
+  Buffers: shared hit=101
+  ->  Result  (cost=0.00..0.03 rows=1 width=180) (actual time=0.005..0.005 rows=1 loops=1)
+Planning Time: 0.027 ms
+Trigger for constraint Application_studentProfileId_fkey: time=0.244 calls=1
+Trigger for constraint Application_opportunityId_fkey: time=0.154 calls=1
+Execution Time: 0.536 ms

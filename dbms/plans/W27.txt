@@ -1,0 +1,41 @@
+Query: W27 (WRITE)
+Database: skillbridge_ap_cp4
+PostgreSQL: PostgreSQL 16.15 (Homebrew) on aarch64-apple-darwin27.0.0, compiled by Apple clang version 21.0.0 (clang-2100.3.34.2), 64-bit
+Runs: 3
+Parameters: ('application-000001', 'UNDER_REVIEW', 'Synthetic review')
+
+SQL:
+UPDATE "Application" SET "status"='UNDER_REVIEW',"recruiterRemarks"='Synthetic review',"updatedAt"=CURRENT_TIMESTAMP WHERE "id"='application-000001';
+
+==================== RUN 1: 0.138 ms ====================
+Update on "Application"  (cost=0.29..8.31 rows=0 width=0) (actual time=0.101..0.102 rows=0 loops=1)
+  Buffers: shared hit=32
+  ->  Index Scan using "Application_pkey" on "Application"  (cost=0.29..8.31 rows=1 width=50) (actual time=0.012..0.012 rows=1 loops=1)
+        Index Cond: (id = 'application-000001'::text)
+        Buffers: shared hit=3
+Planning:
+  Buffers: shared hit=123
+Planning Time: 0.191 ms
+Execution Time: 0.138 ms
+
+==================== RUN 2: 0.140 ms ====================
+Update on "Application"  (cost=0.29..8.31 rows=0 width=0) (actual time=0.099..0.100 rows=0 loops=1)
+  Buffers: shared hit=35
+  ->  Index Scan using "Application_pkey" on "Application"  (cost=0.29..8.31 rows=1 width=50) (actual time=0.017..0.018 rows=1 loops=1)
+        Index Cond: (id = 'application-000001'::text)
+        Buffers: shared hit=5
+Planning:
+  Buffers: shared hit=123
+Planning Time: 0.198 ms
+Execution Time: 0.140 ms
+
+==================== RUN 3: 0.137 ms ====================
+Update on "Application"  (cost=0.29..8.31 rows=0 width=0) (actual time=0.094..0.095 rows=0 loops=1)
+  Buffers: shared hit=35
+  ->  Index Scan using "Application_pkey" on "Application"  (cost=0.29..8.31 rows=1 width=50) (actual time=0.017..0.018 rows=1 loops=1)
+        Index Cond: (id = 'application-000001'::text)
+        Buffers: shared hit=5
+Planning:
+  Buffers: shared hit=123
+Planning Time: 0.218 ms
+Execution Time: 0.137 ms

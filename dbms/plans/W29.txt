@@ -1,0 +1,60 @@
+Query: W29 (WRITE)
+Database: skillbridge_ap_cp4
+PostgreSQL: PostgreSQL 16.15 (Homebrew) on aarch64-apple-darwin27.0.0, compiled by Apple clang version 21.0.0 (clang-2100.3.34.2), 64-bit
+Runs: 3
+Parameters: ('bench-applicant-notification', 'application-000001', 'Application updated', '/student/applications')
+
+SQL:
+INSERT INTO "Notification" ("id","userId","type","title","message","link")
+SELECT 'bench-applicant-notification',sp."userId",'APPLICATION_STATUS','Application status updated','Application updated','/student/applications' FROM "Application" a JOIN "StudentProfile" sp ON sp."id"=a."studentProfileId" WHERE a."id"='application-000001';
+
+==================== RUN 1: 0.309 ms ====================
+Insert on "Notification"  (cost=0.57..16.62 rows=0 width=0) (actual time=0.097..0.099 rows=0 loops=1)
+  Buffers: shared hit=49
+  ->  Nested Loop  (cost=0.57..16.62 rows=1 width=195) (actual time=0.018..0.022 rows=1 loops=1)
+        Buffers: shared hit=8
+        ->  Index Scan using "Application_pkey" on "Application" a  (cost=0.29..8.30 rows=1 width=22) (actual time=0.008..0.013 rows=1 loops=1)
+              Index Cond: (id = 'application-000001'::text)
+              Buffers: shared hit=5
+        ->  Index Scan using "StudentProfile_pkey" on "StudentProfile" sp  (cost=0.28..8.30 rows=1 width=41) (actual time=0.001..0.001 rows=1 loops=1)
+              Index Cond: (id = a."studentProfileId")
+              Buffers: shared hit=3
+Planning:
+  Buffers: shared hit=355
+Planning Time: 0.541 ms
+Trigger for constraint Notification_userId_fkey: time=0.184 calls=1
+Execution Time: 0.309 ms
+
+==================== RUN 2: 0.266 ms ====================
+Insert on "Notification"  (cost=0.57..16.62 rows=0 width=0) (actual time=0.081..0.082 rows=0 loops=1)
+  Buffers: shared hit=48
+  ->  Nested Loop  (cost=0.57..16.62 rows=1 width=195) (actual time=0.013..0.014 rows=1 loops=1)
+        Buffers: shared hit=6
+        ->  Index Scan using "Application_pkey" on "Application" a  (cost=0.29..8.30 rows=1 width=22) (actual time=0.007..0.007 rows=1 loops=1)
+              Index Cond: (id = 'application-000001'::text)
+              Buffers: shared hit=3
+        ->  Index Scan using "StudentProfile_pkey" on "StudentProfile" sp  (cost=0.28..8.30 rows=1 width=41) (actual time=0.001..0.001 rows=1 loops=1)
+              Index Cond: (id = a."studentProfileId")
+              Buffers: shared hit=3
+Planning:
+  Buffers: shared hit=355
+Planning Time: 0.470 ms
+Trigger for constraint Notification_userId_fkey: time=0.161 calls=1
+Execution Time: 0.266 ms
+
+==================== RUN 3: 0.260 ms ====================
+Insert on "Notification"  (cost=0.57..16.62 rows=0 width=0) (actual time=0.079..0.080 rows=0 loops=1)
+  Buffers: shared hit=48
+  ->  Nested Loop  (cost=0.57..16.62 rows=1 width=195) (actual time=0.014..0.014 rows=1 loops=1)
+        Buffers: shared hit=6
+        ->  Index Scan using "Application_pkey" on "Application" a  (cost=0.29..8.30 rows=1 width=22) (actual time=0.007..0.007 rows=1 loops=1)
+              Index Cond: (id = 'application-000001'::text)
+              Buffers: shared hit=3
+        ->  Index Scan using "StudentProfile_pkey" on "StudentProfile" sp  (cost=0.28..8.30 rows=1 width=41) (actual time=0.001..0.001 rows=1 loops=1)
+              Index Cond: (id = a."studentProfileId")
+              Buffers: shared hit=3
+Planning:
+  Buffers: shared hit=355
+Planning Time: 0.456 ms
+Trigger for constraint Notification_userId_fkey: time=0.158 calls=1
+Execution Time: 0.260 ms

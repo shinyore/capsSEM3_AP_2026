@@ -1,0 +1,29 @@
+Query: W12 (WRITE)
+Database: skillbridge_ap_cp4
+PostgreSQL: PostgreSQL 16.15 (Homebrew) on aarch64-apple-darwin27.0.0, compiled by Apple clang version 21.0.0 (clang-2100.3.34.2), 64-bit
+Runs: 3
+Parameters: ('bench-created-skill', 'Benchmark Skill', 'Engineering', 'Synthetic benchmark skill')
+
+SQL:
+INSERT INTO "Skill" ("id","name","category","description","updatedAt") VALUES ('bench-created-skill','Benchmark Skill','Engineering','Synthetic benchmark skill',CURRENT_TIMESTAMP);
+
+==================== RUN 1: 0.161 ms ====================
+Insert on "Skill"  (cost=0.00..0.03 rows=0 width=0) (actual time=0.140..0.141 rows=0 loops=1)
+  Buffers: shared hit=64 dirtied=3
+  ->  Result  (cost=0.00..0.03 rows=1 width=144) (actual time=0.007..0.007 rows=1 loops=1)
+Planning Time: 0.033 ms
+Execution Time: 0.161 ms
+
+==================== RUN 2: 0.141 ms ====================
+Insert on "Skill"  (cost=0.00..0.03 rows=0 width=0) (actual time=0.122..0.123 rows=0 loops=1)
+  Buffers: shared hit=66
+  ->  Result  (cost=0.00..0.03 rows=1 width=144) (actual time=0.006..0.006 rows=1 loops=1)
+Planning Time: 0.031 ms
+Execution Time: 0.141 ms
+
+==================== RUN 3: 0.127 ms ====================
+Insert on "Skill"  (cost=0.00..0.03 rows=0 width=0) (actual time=0.109..0.110 rows=0 loops=1)
+  Buffers: shared hit=66
+  ->  Result  (cost=0.00..0.03 rows=1 width=144) (actual time=0.006..0.006 rows=1 loops=1)
+Planning Time: 0.029 ms
+Execution Time: 0.127 ms
